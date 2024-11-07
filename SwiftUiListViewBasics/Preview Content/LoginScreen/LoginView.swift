@@ -9,19 +9,41 @@ import SwiftUI
 
 struct LoginView: View {
     @State private var userName = ""
+    @State private var passWord = ""
     @State private var isCheckboxChecked = false
+    @Environment(\.presentationMode) var presentationMode // Access to presentation mode
+
 
     var body: some View {
         
         NavigationStack{
             
             HStack{
+                HStack(){
+                    Image(uiImage: UIImage(named: "back")!)
+                        .resizable()           // Makes the image resizable
+                        .scaledToFit()         // Maintains the aspect ratio
+                        .frame(width: 30, height: 30)
+                    
+                    
+                        .onTapGesture {
+                            print("image tapped")
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                        .padding()
+      
+                    
+                    
+                    
+                }
+                
                 Text("Login")
                     .fontDesign(.default)
                     .font(.system(size: 40))
                     .fontWeight(.black)
                     
                     .foregroundColor(Color.pink)
+                Spacer()
                 
             }
             VStack{
@@ -56,7 +78,7 @@ struct LoginView: View {
                         Spacer()
                     }
                     HStack{
-                        TextField("Enter Password",text: $userName)
+                        TextField("Enter Password",text: $passWord)
                            // .padding(.horizontal, 10)
                             .frame(height: 50) // Increased height for username field
                             .background(Color(.systemGray6)) // Optional background color
@@ -98,10 +120,12 @@ struct LoginView: View {
             }
             Spacer()
         }
-        
+
+         // Hides back button
+
         
         Spacer()
-        
+            .navigationBarBackButtonHidden(true)
     }
     
     
