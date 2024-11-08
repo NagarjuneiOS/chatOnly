@@ -16,111 +16,112 @@ struct LoginView: View {
 
     var body: some View {
         
-        NavigationStack{
-            
-            HStack{
-                HStack(){
-                    Image(uiImage: UIImage(named: "back")!)
-                        .resizable()           // Makes the image resizable
-                        .scaledToFit()         // Maintains the aspect ratio
-                        .frame(width: 30, height: 30)
-                    
-                    
-                        .onTapGesture {
-                            print("image tapped")
-                            presentationMode.wrappedValue.dismiss()
-                        }
-                        .padding()
       
+            NavigationStack{
+                
+                HStack{
+                    HStack(){
+                        Image(uiImage: UIImage(named: "back")!)
+                            .resizable()           // Makes the image resizable
+                            .scaledToFit()         // Maintains the aspect ratio
+                            .frame(width: 30, height: 30)
+                        
+                        
+                            .onTapGesture {
+                                print("image tapped")
+                                presentationMode.wrappedValue.dismiss()
+                            }
+                            .padding()
+                        
+                        
+                        
+                        
+                    }
                     
+                    Text("Login")
+                        .fontDesign(.default)
+                        .font(.system(size: 40))
+                        .fontWeight(.black)
+                    
+                        .foregroundColor(Color.pink)
+                    Spacer()
+                    
+                }
+                VStack{
+                    VStack(spacing: -20){
+                        HStack{
+                            Text("Phone number:")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .padding()
+                                .foregroundStyle(.gray)
+                            Spacer()
+                        }
+                        HStack{
+                            TextField("Enter Phone number",text: $userName)
+                            // .padding(.horizontal, 10)
+                                .frame(height: 50) // Increased height for username field
+                                .background(Color(.systemGray6)) // Optional background color
+                                .cornerRadius(8)
+                            
+                                .padding()
+                        }
+                        
+                        
+                    }
+                    VStack(spacing: -20){
+                        HStack{
+                            Text("Password:")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .padding()
+                                .foregroundStyle(.gray)
+                            Spacer()
+                        }
+                        HStack{
+                            TextField("Enter Password",text: $passWord)
+                            // .padding(.horizontal, 10)
+                                .frame(height: 50) // Increased height for username field
+                                .background(Color(.systemGray6)) // Optional background color
+                                .cornerRadius(8)
+                            
+                                .padding()
+                        }
+                        
+                        HStack{
+                            // CheckboxView(isChecked: $isCheckboxChecked, label: "Remember me")
+                            //     .padding() // Add padding around checkbox view
+                            Text("Forgot password?")
+                                .padding()
+                            
+                        }
+                        
+                        
+                    }
+                    
+                    Button {
+                        print("Login tapped")
+                        
+                    } label: {
+                        Text("login")
+                        
+                            .font(.title)
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity) // Expands button horizontally
+                            .frame(height: 50) // Sets height to 50
+                            .background(Color.pink)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                            .shadow(radius: 5)
+                            .padding()
+                        
+                    }
                     
                     
                 }
-                
-                Text("Login")
-                    .fontDesign(.default)
-                    .font(.system(size: 40))
-                    .fontWeight(.black)
-                    
-                    .foregroundColor(Color.pink)
                 Spacer()
-                
             }
-            VStack{
-                VStack(spacing: -20){
-                    HStack{
-                        Text("User name:")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .padding()
-                            .foregroundStyle(.gray)
-                        Spacer()
-                    }
-                    HStack{
-                        TextField("Enter username",text: $userName)
-                           // .padding(.horizontal, 10)
-                            .frame(height: 50) // Increased height for username field
-                            .background(Color(.systemGray6)) // Optional background color
-                            .cornerRadius(8)
-
-                            .padding()
-                    }
-                    
-                    
-                }
-                VStack(spacing: -20){
-                    HStack{
-                        Text("Password:")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .padding()
-                            .foregroundStyle(.gray)
-                        Spacer()
-                    }
-                    HStack{
-                        TextField("Enter Password",text: $passWord)
-                           // .padding(.horizontal, 10)
-                            .frame(height: 50) // Increased height for username field
-                            .background(Color(.systemGray6)) // Optional background color
-                            .cornerRadius(8)
-
-                            .padding()
-                    }
-                    
-                    HStack{
-                       // CheckboxView(isChecked: $isCheckboxChecked, label: "Remember me")
-                       //     .padding() // Add padding around checkbox view
-                        Text("Forgot password?")
-                            .padding()
-
-                    }
-                    
-                    
-                }
-                
-                Button {
-                    print("Login tapped")
-                    
-                } label: {
-                    Text("login")
-                      
-                        .font(.title)
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity) // Expands button horizontally
-                        .frame(height: 50) // Sets height to 50
-                        .background(Color.pink)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                        .shadow(radius: 5)
-                        .padding()
-
-                }
-
-
-            }
-            Spacer()
-        }
-
+   
          // Hides back button
 
         

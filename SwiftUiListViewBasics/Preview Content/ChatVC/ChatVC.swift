@@ -27,10 +27,12 @@ struct ChatVC: View {
                     presentationMode.wrappedValue.dismiss()
                 }
             
-            Text("Nagarjune")
-                .font(.title)
-                .fontDesign(.rounded)
-                .padding()
+             
+                Text("Nagarjune")
+                    .font(.title)
+                    .fontDesign(.rounded)
+                    .padding()
+            
             Spacer()
                 .background(Color.purple)
             
