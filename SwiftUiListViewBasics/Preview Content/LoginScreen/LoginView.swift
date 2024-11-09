@@ -6,14 +6,21 @@
 ////
 //
 import SwiftUI
+import Firebase
+import FirebaseDatabase
 
 struct LoginView: View {
+    
+    //Mark variables:-
+    @State var userModels = [UsersModel]()
     @State private var userName = ""
     @State private var passWord = ""
     @State private var isCheckboxChecked = false
     @Environment(\.presentationMode) var presentationMode // Access to presentation mode
-
-
+    let ref: DatabaseReference = Database.database().reference()
+    @State var alertMessge = ""
+    @State var showALert = false
+    @State var loginSuccess = false
     var body: some View {
         
       
@@ -101,6 +108,7 @@ struct LoginView: View {
                     
                     Button {
                         print("Login tapped")
+                        self.checLogin()
                         
                     } label: {
                         Text("login")
@@ -116,19 +124,89 @@ struct LoginView: View {
                             .padding()
                         
                     }
-                    
+                    .alert(isPresented: $showALert) {
+                        Alert(title: Text("Chat only"),message: Text(self.alertMessge),dismissButton: .default(Text("Ok"), action: {
+                            if self.loginSuccess{
+                                List(landMarks, id: \.id){ landmarkss in
+                                    NavigationLink(destination: ChatVC()) {
+                                        LandmarkView(ladmarks: landmarkss)
+                                    }
+                                    .navigationBarBackButtonHidden(true)
+                                    
+                                }
+                            }
+                           
+                        }))
+                    }
+                
                     
                 }
                 Spacer()
             }
    
-         // Hides back button
-
+      
+            .onAppear {
+                self.fetchUserDetails()
+            }
         
         Spacer()
             .navigationBarBackButtonHidden(true)
     }
+    func checLogin(){
+        var validation = "numbernotverified"
+        self.userModels.enumerated().forEach { index ,value  in
+        
+            if userModels[index].number == userName{
+                validation = "numberverified"
+                if userModels[index].password == passWord{
+                    validation = "success"
+                }else{
+                    validation = "passwordnotverified"
+                }
+                
+                
+            }
+     
+        }
+        showALert = true
+        if validation == "numbernotverified"{
+            self.loginSuccess = false
+            alertMessge = "Your number not verified please register yourself"
+        }else if validation == "passwordnotverified"{
+            self.loginSuccess = false
+            alertMessge = "Your password is incorrect please enter correct password"
+
+        }else{
+            self.loginSuccess = true
+            alertMessge = "login successful"
+        }
+        
+    }
     
+     func fetchUserDetails(){
+        ref.child("users").observe(.value, with: { snapshot in
+            if let value = snapshot.value as? [String: Any] {
+                // Process the updated value
+                self.userModels.removeAll()
+                print("New value: \(value)")
+                value.compactMap ({ $0.value }).compactMap { data in
+                    let datas = data as? [String: Any]
+                    let firstName = datas?["firstname"] as? String ?? ""
+                    let lastName = datas?["lastname"] as? String ?? ""
+                    let password = datas?["password"] as? String ?? ""
+                    let number = datas?["phonenumber"] as? String ?? ""
+                    let time = datas?["timestamp"] as? String ?? ""
+                    var tempUserModel = UsersModel(firstName: firstName,lastName: lastName,number: number,password: password,timeStamp: time)
+                    self.userModels.append(tempUserModel)
+                }
+                dump(self.userModels)
+            }
+        }) { error in
+            print("Failed to read value: \(error.localizedDescription)")
+        }
+       
+       
+   }
     
 }
 

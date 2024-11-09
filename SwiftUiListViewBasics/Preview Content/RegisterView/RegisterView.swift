@@ -217,18 +217,21 @@ struct RegisterView: View {
         
     }
      func fetchUserDetails(){
-        ref.child("users").observeSingleEvent(of: .value) { snapshot in
-                   guard let userData = snapshot.value as? [String: Any] else {
-                       print("No user data found")
-                       return
-                   }
-            let datas = userData.compactMap { $0.value }.forEach { data in
-                let datass = data as! [String: Any]
-                print(datass["phonenumber"] as? String ?? "")
-                arrOfUserPhoneNumbers.append(datass["phonenumber"] as? String ?? "")
-            }
-         
-               }
+         ref.child("users").observe(.value, with: { snapshot in
+             if let value = snapshot.value as? [String: Any] {
+                 // Process the updated value
+                // print("New value: \(value)")
+                 let datas: () = value.compactMap { $0.value }.forEach { data in
+                     let datass = data as! [String: Any]
+                    // print(datass["phonenumber"] as? String ?? "")
+                     arrOfUserPhoneNumbers.append(datass["phonenumber"] as? String ?? "")
+                 }
+                 
+             }
+         }) { error in
+             print("Failed to read value: \(error.localizedDescription)")
+         }
+
         
         
     }
