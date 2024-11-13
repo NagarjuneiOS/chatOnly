@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct LandmarkView: View {
-    var ladmarks: Landmark
+   // var ladmarks: Landmark
+    var userData: UsersModel
     
     var body: some View {
     
@@ -20,10 +21,10 @@ struct LandmarkView: View {
                         .frame(width: 50,height: 50)
                         .padding(EdgeInsets(top: 0, leading: 0, bottom:  0, trailing: 0))
                     VStack(alignment: .leading,spacing: 0){
-                        Text(ladmarks.name)
+                        Text(userData.firstName ?? "" + (userData.lastName ?? ""))
                             .fontWeight(.semibold)
                             .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                        Text("Hi, are you coming Today")
+                        Text("")
                             .fontWeight(.light)
                         
                     }
@@ -37,15 +38,15 @@ struct LandmarkView: View {
                             .fontWeight(.light)
                             .font(.subheadline)
                         
-                        if self.ladmarks.name == "Twin Lake" || self.ladmarks.name == "Silver Salmon Creek"{
-                            Text("1")
-                                .font(.system(size: 15, weight: .bold)) // Make the text larger and bold
-                                .foregroundColor(.white) // Set text color to white
-                                .padding(.horizontal, 10) // Horizontal padding for rounded effect
-                                .padding(.vertical, 5) // Vertical padding for height
-                                .background(Circle().fill(Color.green))
-                             //   .padding()
-                        }
+//                        if self.ladmarks.name == "Twin Lake" || self.ladmarks.name == "Silver Salmon Creek"{
+//                            Text("1")
+//                                .font(.system(size: 15, weight: .bold)) // Make the text larger and bold
+//                                .foregroundColor(.white) // Set text color to white
+//                                .padding(.horizontal, 10) // Horizontal padding for rounded effect
+//                                .padding(.vertical, 5) // Vertical padding for height
+//                                .background(Circle().fill(Color.green))
+//                             //   .padding()
+//                        }
                     }
                     .padding()
                  
@@ -62,7 +63,7 @@ struct LandmarkView: View {
 }
 
 #Preview {
-    LandmarkView(ladmarks: landMarks[0])
+    LandmarkView(userData: UsersModel())
     
        
 }

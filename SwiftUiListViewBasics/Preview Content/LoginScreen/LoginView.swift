@@ -106,38 +106,37 @@ struct LoginView: View {
                         
                     }
                     
-                    Button {
-                        print("Login tapped")
-                        self.checLogin()
-                        
-                    } label: {
-                        Text("login")
-                        
-                            .font(.title)
-                            .fontWeight(.semibold)
-                            .frame(maxWidth: .infinity) // Expands button horizontally
-                            .frame(height: 50) // Sets height to 50
-                            .background(Color.pink)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                            .shadow(radius: 5)
-                            .padding()
-                        
-                    }
-                    .alert(isPresented: $showALert) {
-                        Alert(title: Text("Chat only"),message: Text(self.alertMessge),dismissButton: .default(Text("Ok"), action: {
-                            if self.loginSuccess{
-                                List(landMarks, id: \.id){ landmarkss in
-                                    NavigationLink(destination: ChatVC()) {
-                                        LandmarkView(ladmarks: landmarkss)
-                                    }
-                                    .navigationBarBackButtonHidden(true)
+                    NavigationLink(destination: LandMarkList(),isActive: self.$loginSuccess) {
+                        Button {
+                            print("Login tapped")
+                            self.checLogin()
+                            
+                        } label: {
+                            Text("login")
+                            
+                                .font(.title)
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity) // Expands button horizontally
+                                .frame(height: 50) // Sets height to 50
+                                .background(Color.pink)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                                .shadow(radius: 5)
+                                .padding()
+                            
+                        }
+                        .alert(isPresented: $showALert) {
+                            Alert(title: Text("Chat only"),message: Text(self.alertMessge),dismissButton: .default(Text("Ok"), action: {
+                                self.loginSuccess = self.alertMessge == "login successful" ? true : false
                                     
-                                }
-                            }
-                           
-                        }))
+                                
+                               
+                            }))
+                        }
                     }
+                    
+                    
+               
                 
                     
                 }
@@ -177,7 +176,7 @@ struct LoginView: View {
             alertMessge = "Your password is incorrect please enter correct password"
 
         }else{
-            self.loginSuccess = true
+        
             alertMessge = "login successful"
         }
         

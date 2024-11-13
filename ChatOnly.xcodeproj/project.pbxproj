@@ -45,9 +45,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1596FD702CC0E4C8009922E9 /* SwiftUiListViewBasics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUiListViewBasics.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		1596FD802CC0E4CB009922E9 /* SwiftUiListViewBasicsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftUiListViewBasicsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1596FD8A2CC0E4CB009922E9 /* SwiftUiListViewBasicsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftUiListViewBasicsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1596FD702CC0E4C8009922E9 /* ChatOnly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatOnly.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1596FD802CC0E4CB009922E9 /* ChatOnlyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatOnlyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1596FD8A2CC0E4CB009922E9 /* ChatOnlyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatOnlyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -124,9 +124,9 @@
 		1596FD712CC0E4C8009922E9 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1596FD702CC0E4C8009922E9 /* SwiftUiListViewBasics.app */,
-				1596FD802CC0E4CB009922E9 /* SwiftUiListViewBasicsTests.xctest */,
-				1596FD8A2CC0E4CB009922E9 /* SwiftUiListViewBasicsUITests.xctest */,
+				1596FD702CC0E4C8009922E9 /* ChatOnly.app */,
+				1596FD802CC0E4CB009922E9 /* ChatOnlyTests.xctest */,
+				1596FD8A2CC0E4CB009922E9 /* ChatOnlyUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -134,9 +134,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1596FD6F2CC0E4C8009922E9 /* SwiftUiListViewBasics */ = {
+		1596FD6F2CC0E4C8009922E9 /* ChatOnly */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1596FD942CC0E4CB009922E9 /* Build configuration list for PBXNativeTarget "SwiftUiListViewBasics" */;
+			buildConfigurationList = 1596FD942CC0E4CB009922E9 /* Build configuration list for PBXNativeTarget "ChatOnly" */;
 			buildPhases = (
 				1596FD6C2CC0E4C8009922E9 /* Sources */,
 				1596FD6D2CC0E4C8009922E9 /* Frameworks */,
@@ -149,7 +149,7 @@
 			fileSystemSynchronizedGroups = (
 				1596FD722CC0E4C8009922E9 /* SwiftUiListViewBasics */,
 			);
-			name = SwiftUiListViewBasics;
+			name = ChatOnly;
 			packageProductDependencies = (
 				15EDE60B2CDC9A79007A52F8 /* FirebaseAnalytics */,
 				15EDE60D2CDC9A79007A52F8 /* FirebaseAnalyticsOnDeviceConversion */,
@@ -171,12 +171,12 @@
 				15EDE62D2CDC9A79007A52F8 /* FirebaseStorageCombine-Community */,
 			);
 			productName = SwiftUiListViewBasics;
-			productReference = 1596FD702CC0E4C8009922E9 /* SwiftUiListViewBasics.app */;
+			productReference = 1596FD702CC0E4C8009922E9 /* ChatOnly.app */;
 			productType = "com.apple.product-type.application";
 		};
-		1596FD7F2CC0E4CB009922E9 /* SwiftUiListViewBasicsTests */ = {
+		1596FD7F2CC0E4CB009922E9 /* ChatOnlyTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1596FD972CC0E4CB009922E9 /* Build configuration list for PBXNativeTarget "SwiftUiListViewBasicsTests" */;
+			buildConfigurationList = 1596FD972CC0E4CB009922E9 /* Build configuration list for PBXNativeTarget "ChatOnlyTests" */;
 			buildPhases = (
 				1596FD7C2CC0E4CB009922E9 /* Sources */,
 				1596FD7D2CC0E4CB009922E9 /* Frameworks */,
@@ -190,16 +190,16 @@
 			fileSystemSynchronizedGroups = (
 				1596FD832CC0E4CB009922E9 /* SwiftUiListViewBasicsTests */,
 			);
-			name = SwiftUiListViewBasicsTests;
+			name = ChatOnlyTests;
 			packageProductDependencies = (
 			);
 			productName = SwiftUiListViewBasicsTests;
-			productReference = 1596FD802CC0E4CB009922E9 /* SwiftUiListViewBasicsTests.xctest */;
+			productReference = 1596FD802CC0E4CB009922E9 /* ChatOnlyTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		1596FD892CC0E4CB009922E9 /* SwiftUiListViewBasicsUITests */ = {
+		1596FD892CC0E4CB009922E9 /* ChatOnlyUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1596FD9A2CC0E4CB009922E9 /* Build configuration list for PBXNativeTarget "SwiftUiListViewBasicsUITests" */;
+			buildConfigurationList = 1596FD9A2CC0E4CB009922E9 /* Build configuration list for PBXNativeTarget "ChatOnlyUITests" */;
 			buildPhases = (
 				1596FD862CC0E4CB009922E9 /* Sources */,
 				1596FD872CC0E4CB009922E9 /* Frameworks */,
@@ -213,11 +213,11 @@
 			fileSystemSynchronizedGroups = (
 				1596FD8D2CC0E4CB009922E9 /* SwiftUiListViewBasicsUITests */,
 			);
-			name = SwiftUiListViewBasicsUITests;
+			name = ChatOnlyUITests;
 			packageProductDependencies = (
 			);
 			productName = SwiftUiListViewBasicsUITests;
-			productReference = 1596FD8A2CC0E4CB009922E9 /* SwiftUiListViewBasicsUITests.xctest */;
+			productReference = 1596FD8A2CC0E4CB009922E9 /* ChatOnlyUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -243,7 +243,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 1596FD6B2CC0E4C8009922E9 /* Build configuration list for PBXProject "SwiftUiListViewBasics" */;
+			buildConfigurationList = 1596FD6B2CC0E4C8009922E9 /* Build configuration list for PBXProject "ChatOnly" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -260,9 +260,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1596FD6F2CC0E4C8009922E9 /* SwiftUiListViewBasics */,
-				1596FD7F2CC0E4CB009922E9 /* SwiftUiListViewBasicsTests */,
-				1596FD892CC0E4CB009922E9 /* SwiftUiListViewBasicsUITests */,
+				1596FD6F2CC0E4C8009922E9 /* ChatOnly */,
+				1596FD7F2CC0E4CB009922E9 /* ChatOnlyTests */,
+				1596FD892CC0E4CB009922E9 /* ChatOnlyUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -318,12 +318,12 @@
 /* Begin PBXTargetDependency section */
 		1596FD822CC0E4CB009922E9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 1596FD6F2CC0E4C8009922E9 /* SwiftUiListViewBasics */;
+			target = 1596FD6F2CC0E4C8009922E9 /* ChatOnly */;
 			targetProxy = 1596FD812CC0E4CB009922E9 /* PBXContainerItemProxy */;
 		};
 		1596FD8C2CC0E4CB009922E9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 1596FD6F2CC0E4C8009922E9 /* SwiftUiListViewBasics */;
+			target = 1596FD6F2CC0E4C8009922E9 /* ChatOnly */;
 			targetProxy = 1596FD8B2CC0E4CB009922E9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -523,7 +523,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftUiListViewBasics.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SwiftUiListViewBasics";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ChatOnly.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ChatOnly";
 			};
 			name = Debug;
 		};
@@ -542,7 +542,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftUiListViewBasics.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SwiftUiListViewBasics";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ChatOnly.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ChatOnly";
 			};
 			name = Release;
 		};
@@ -583,7 +583,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1596FD6B2CC0E4C8009922E9 /* Build configuration list for PBXProject "SwiftUiListViewBasics" */ = {
+		1596FD6B2CC0E4C8009922E9 /* Build configuration list for PBXProject "ChatOnly" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1596FD922CC0E4CB009922E9 /* Debug */,
@@ -592,7 +592,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1596FD942CC0E4CB009922E9 /* Build configuration list for PBXNativeTarget "SwiftUiListViewBasics" */ = {
+		1596FD942CC0E4CB009922E9 /* Build configuration list for PBXNativeTarget "ChatOnly" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1596FD952CC0E4CB009922E9 /* Debug */,
@@ -601,7 +601,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1596FD972CC0E4CB009922E9 /* Build configuration list for PBXNativeTarget "SwiftUiListViewBasicsTests" */ = {
+		1596FD972CC0E4CB009922E9 /* Build configuration list for PBXNativeTarget "ChatOnlyTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1596FD982CC0E4CB009922E9 /* Debug */,
@@ -610,7 +610,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1596FD9A2CC0E4CB009922E9 /* Build configuration list for PBXNativeTarget "SwiftUiListViewBasicsUITests" */ = {
+		1596FD9A2CC0E4CB009922E9 /* Build configuration list for PBXNativeTarget "ChatOnlyUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1596FD9B2CC0E4CB009922E9 /* Debug */,
