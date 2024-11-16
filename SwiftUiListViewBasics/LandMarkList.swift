@@ -10,78 +10,276 @@ import SwiftUI
 
 struct LandMarkList: View {
     @State var usersModel = [UsersModel]()
-    @State private var showAlert = true
-
+    @State var requestListModel = [RequestListModel]()
+    @State private var showAlert = false
+    @State private var navigateToChat = false
+    @State private var alertMessage = ""
+    @State private var userNumber = ""
+    @State private var showAlertForAcceptRequest = false
+    @State private var requestUpdateKey = ""
     var body: some View {
         NavigationView{
             VStack(spacing: 0){
                 HStack(){
-                    Text("WhatsApp")
+                    Text("Chat Only")
                         .font(.title)
-                        .fontWeight(.bold)
+                        .fontWeight(.heavy)
+                        .foregroundStyle(Color.pink)
                         .padding()
                     Spacer()
                     HStack(spacing: 20) {
                         Image(systemName: "camera")
                             .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: -10))
-                        Image(systemName: "checkmark")
-                            .padding()
+                            .foregroundStyle(Color.pink)
+                        
+                        NavigationLink(destination: WelcomeView()) {
+                            
+                            Image(uiImage: UIImage(named: "settings")!)
+                                .resizable()
+                                .renderingMode(.template)
+                                .frame(width: 25,height: 25)
+                                .foregroundStyle(Color.pink)
+                                .padding()
+                            
+                        }
+                        .onTapGesture {
+                            self.reset()
+                        }
+                        .navigationBarBackButtonHidden(true)
+                  
+                         
                     }
                     
                 }
                 .padding(.top)
                 Divider()
-                List(usersModel, id: \.number){ landmarkss in
+                List(usersModel, id: \.number){ userModel in
                     
-                    NavigationLink(destination: ChatVC()) {
-                       
-                        LandmarkView(userData: landmarkss)
+                    Button {
+                        sendRequestToUsers(userModel: userModel) {
+                            
+                        }
+                        
+                    } label: {
+                        LandmarkView(userData: userModel)
+                        
                     }
-                    .navigationBarBackButtonHidden(true)
-
+                    
+                    
+                    
+                    
+                    
+                    
                 }
                 .listStyle(PlainListStyle())
                 .padding(EdgeInsets(top: 0, leading: -10, bottom: 0, trailing: -20))
+                NavigationLink(destination: ChatVC(),isActive: $navigateToChat) {
+                    
+                }
+                .hidden()
+                
             }
         }
         .navigationBarBackButtonHidden(true)
-        .onAppear {
-            self.fetchUserDetails()
+        
+        //        .alert(isPresented: $showAlert) {
+        //            Alert(title: Text("Chat only"),message: Text(self.alertMessage),dismissButton: .default(Text("Ok"), action: {
+        //                self.showAlert = false
+        //
+        //            }))
+        //        }
+        //        .alert(isPresented:self.$showAlertForAcceptRequest){
+        //            Alert(title: Text("Chat only"), message: Text("User sent request to you, you may accept or reject the request"), primaryButton: .default(Text("decline"), action: {
+        //                self.handleRequestResponse(accept: false)
+        //            }), secondaryButton: .default(Text("Accept"), action: {
+        //                self.handleRequestResponse(accept: true)
+        //
+        //
+        //            }))
+        //        }
+        .alert(isPresented: Binding<Bool>(
+            get: { showAlert || showAlertForAcceptRequest },
+            set: { _ in }
+        )) {
+            if showAlertForAcceptRequest {
+                return Alert(
+                    title: Text("Chat Only"),
+                    message: Text("User sent request to you, you may accept or reject the request"),
+                    primaryButton: .default(Text("Decline"), action: {
+                        self.handleRequestResponse(accept: false)
+                    }),
+                    secondaryButton: .default(Text("Accept"), action: {
+                        self.handleRequestResponse(accept: true)
+                    })
+                )
+            } else {
+                return Alert(
+                    title: Text("Chat Only"),
+                    message: Text(alertMessage),
+                    dismissButton: .default(Text("Ok"), action: {
+                        self.showAlert = false
+                    })
+                )
+            }
         }
-
+        
+        .onAppear {
+            self.userNumber = UserDefaults.standard.value(forKey: "login_number") as? String ?? ""
+            self.fetchUserDetails()
+            self.requestListModels()
+        }
+        
+    }
+    func reset(){
+        UserDefaults.standard.set("", forKey: "login_number")
+        UserDefaults.standard.set("false", forKey: "loggedin")
     }
     
-    func sendRequestToUsers(){
-        
+    func sendRequestToUsers(userModel: UsersModel ,completion: () -> ()){
+        print((userModel.number ?? "") as String)
+        if self.requestListModel.count > 0{
+            var req = self.requestListModel.forEach { RequestListModel in
+                print(RequestListModel.key ?? "")
+                print("\(self.userNumber ?? "")-\(userModel.number ?? "")")
+                print("\(userModel.number ?? "")-\(self.userNumber ?? "")")
+                
+                if (RequestListModel.key ?? "" == "\(self.userNumber ?? "")-\(userModel.number ?? "")") || (RequestListModel.key ?? "" == "\(userModel.number ?? "")-\(self.userNumber ?? "")"){
+                    
+                    switch RequestListModel.value{
+                    case "request_sent":
+                        
+                        if (RequestListModel.key ?? "" == "\(self.userNumber)-\(userModel.number ?? "")"){
+                            self.showAlert = true
+                            self.alertMessage = "Request already sent please wait for your friend accept your request"
+                        }else{
+                            self.requestUpdateKey = RequestListModel.key ?? ""
+                            self.showAlertForAcceptRequest = true
+                            
+                        }
+                        
+                        
+                    case "request_accepted":
+                        self.showAlert = false
+                        self.navigateToChat = true
+                    case "request_declined":
+                        self.showAlert = true
+                        self.navigateToChat = false
+                    default:
+                        ref.child("request_list").child("\("\(self.userNumber ?? "")-\(userModel.number ?? "")")").setValue("request_sent"){ error ,_ in
+                            if let error = error{
+                                print("error")
+                            }else{
+                                print("Request sent successfully")
+                                self.showAlert = true
+                                self.alertMessage = "Request sent successfully"
+                                
+                            }
+                            
+                        }
+                    }
+                    
+                }else{
+//                    ref.child("request_list").child("\("\(self.userNumber ?? "")-\(userModel.number ?? "")")").setValue("request_sent"){ error ,_ in
+//                        if let error = error{
+//                            print("error")
+//                        }else{
+//                            print("Request sent successfully")
+//                            self.showAlert = true
+//                            self.alertMessage = "Request sent successfully"
+//                            
+//                        }
+//                        
+//                    }
+                }
+            }
             
+        }else{
+            ref.child("request_list").child("\("\(self.userNumber ?? "")-\(userModel.number ?? "")")").setValue("request_sent"){ error ,_ in
+                if let error = error{
+                    print("error")
+                }else{
+                    print("Request sent successfully")
+                    self.showAlert = true
+                    self.alertMessage = "Request sent successfully"
+                }
+                
+            }
+        }
+        
+        
+        
+        
     }
     
     func fetchUserDetails(){
-      
-       ref.child("users").observe(.value, with: { snapshot in
-           if let value = snapshot.value as? [String: Any] {
-               // Process the updated value
-               usersModel.removeAll()
-               print("New value: \(value)")
-               value.compactMap ({ $0.value }).compactMap { data in
-                   let datas = data as? [String: Any]
-                   let firstName = datas?["firstname"] as? String ?? ""
-                   let lastName = datas?["lastname"] as? String ?? ""
-                   let password = datas?["password"] as? String ?? ""
-                   let number = datas?["phonenumber"] as? String ?? ""
-                   let time = datas?["timestamp"] as? String ?? ""
-                   var tempUserModel = UsersModel(firstName: firstName,lastName: lastName,number: number,password: password,timeStamp: time)
-                   usersModel.append(tempUserModel)
-               }
-               dump(usersModel)
-           }
-       }) { error in
-           print("Failed to read value: \(error.localizedDescription)")
-       }
-      
-       
-    }
         
+        ref.child("users").observe(.value, with: { snapshot in
+            if let value = snapshot.value as? [String: Any] {
+                // Process the updated value
+                usersModel.removeAll()
+                print("New value: \(value)")
+                value.compactMap ({ $0.value }).compactMap { data in
+                    let datas = data as? [String: Any]
+                    let firstName = datas?["firstname"] as? String ?? ""
+                    let lastName = datas?["lastname"] as? String ?? ""
+                    let password = datas?["password"] as? String ?? ""
+                    let number = datas?["phonenumber"] as? String ?? ""
+                    let time = datas?["timestamp"] as? String ?? ""
+                    if self.userNumber != number{
+                        var tempUserModel = UsersModel(firstName: firstName,lastName: lastName,number: number,password: password,timeStamp: time)
+                        usersModel.append(tempUserModel)
+                    }
+                    
+                }
+                dump(usersModel)
+            }
+        }) { error in
+            print("Failed to read value: \(error.localizedDescription)")
+        }
+        
+        
+    }
+    func requestListModels(){
+        
+        
+        ref.child("request_list").observe(.value, with: { snapshot in
+            if let value = snapshot.value as? [String: Any] {
+                // Process the updated value
+                requestListModel.removeAll()
+                print("New value: \(value)")
+                
+                value.forEach { values in
+                    var requeslistt = RequestListModel(key: values.key ,value: values.value as! String)
+                    
+                    self.requestListModel.append(requeslistt)
+                }
+                dump(requestListModel)
+            }
+        }) { error in
+            print("Failed to read value: \(error.localizedDescription)")
+        }
+        
+        
+    }
+    func handleRequestResponse(accept: Bool) {
+        
+        
+        let newValue = accept ? "request_accepted" : "request_declined"
+        
+        ref.child("request_list").child(requestUpdateKey).setValue(newValue) { error, _ in
+            if let error = error {
+                print("Error updating request status: \(error.localizedDescription)")
+            } else {
+                print("Request \(accept ? "accepted" : "declined") successfully.")
+                self.showAlertForAcceptRequest = false
+                if accept {
+                    self.navigateToChat = true
+                }
+            }
+        }
+    }
+    
+    
 }
 
 #Preview {

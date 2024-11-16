@@ -176,7 +176,8 @@ struct LoginView: View {
             alertMessge = "Your password is incorrect please enter correct password"
 
         }else{
-        
+            UserDefaults.standard.set(self.userName, forKey: "login_number")
+            UserDefaults.standard.set("true", forKey: "loggedin")
             alertMessge = "login successful"
         }
         

@@ -10,11 +10,19 @@ import SwiftUI
 @main
 struct SwiftUiListViewBasicsApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    let loginKey = UserDefaults.standard.value(forKey: "loggedin")
+
     
     var body: some Scene {
         WindowGroup {
-           // WelcomeView()
-            LandMarkList()
+            if (self.loginKey as? String ?? "") == "true"{
+                LandMarkList()
+            }else{
+                WelcomeView()
+            }
+         
+            
+           
         }
     }
 }

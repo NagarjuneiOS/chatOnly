@@ -253,13 +253,6 @@ struct RegisterView: View {
             
         }
         
-        ref.child("user_numbers").setValue(number){ error,_ in
-            if let error = error{
-                print(error)
-            }else{
-                print("User registered success")
-            }
-        }
     }
 }
 
