@@ -17,6 +17,7 @@ struct LandMarkList: View {
     @State private var userNumber = ""
     @State private var showAlertForAcceptRequest = false
     @State private var requestUpdateKey = ""
+    @State private var receiverUserNumber = ""
     var body: some View {
         NavigationView{
             VStack(spacing: 0){
@@ -56,6 +57,7 @@ struct LandMarkList: View {
                 List(usersModel, id: \.number){ userModel in
                     
                     Button {
+                        self.receiverUserNumber = userModel.number ?? ""
                         sendRequestToUsers(userModel: userModel) {
                             
                         }
@@ -73,7 +75,7 @@ struct LandMarkList: View {
                 }
                 .listStyle(PlainListStyle())
                 .padding(EdgeInsets(top: 0, leading: -10, bottom: 0, trailing: -20))
-                NavigationLink(destination: ChatVC(),isActive: $navigateToChat) {
+                NavigationLink(destination: ChatVC(receiverUserNumber: self.receiverUserNumber),isActive: $navigateToChat) {
                     
                 }
                 .hidden()
