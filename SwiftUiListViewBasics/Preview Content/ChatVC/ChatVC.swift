@@ -9,8 +9,9 @@ import SwiftUI
 import Firebase
 import FirebaseCore
 import FirebaseMessaging
+var receiverUserNumberr = ""
+
 struct ChatVC: View {
-    var receiverUserNumber = ""
     @Environment(\.presentationMode) var presentationMode // Access to presentation mode
     @State private var message: String = "" // State variable to hold the text input
     @State private var messages: [String] = [] // Array to hold messages
@@ -35,7 +36,7 @@ struct ChatVC: View {
                 }
             
              
-            Text(self.receiverUserNumber)
+            Text(receiverUserNumberr)
                     .font(.title)
                     .fontDesign(.rounded)
                     .padding()
@@ -64,7 +65,7 @@ struct ChatVC: View {
             Image(uiImage: UIImage(named: "twinlake")!)
                 .resizable()
             
-            ScrollViewReader { scrollView in
+            ScrollViewReader { scrollVieww in
                 List {
                     
                     ForEach(arrOfUserMessageModel,id: \.message) { model in
@@ -82,7 +83,7 @@ struct ChatVC: View {
                         }
                     }
                     
-                    
+                    .id("lastmessage")
                     
                     
                  
@@ -91,7 +92,7 @@ struct ChatVC: View {
                 .listStyle(PlainListStyle())
                 .onChange(of: arrOfUserMessageModel) { _ in
                                      if let lastMessage = arrOfUserMessageModel.last {
-                                         scrollView.scrollTo(lastMessage.id, anchor: .bottom)
+                                         scrollVieww.scrollTo("lastmessage", anchor: .top)
                                      }
                                  }
             }
@@ -127,7 +128,7 @@ struct ChatVC: View {
         .padding()
         
         .onAppear {
-            print("receiver number ->\(self.receiverUserNumber)")
+            print("receiver number ->\(receiverUserNumberr)")
             self.getMessages()
         }
     }
@@ -136,77 +137,61 @@ struct ChatVC: View {
     }
     func getMessages() {
         var sender = self.sender
+        print(self.sender)
+        print(receiverUserNumberr)
         
         ref.child("user_chats").observe(.value) { snapshot in
             if let userChats = snapshot.value as? [String: Any]{
                 var keysArray = userChats.compactMap { $0.key }
-                if keysArray.contains("\(sender)_\(self.receiverUserNumber)"){
-                    self.childPath = "\(sender)_\(self.receiverUserNumber)"
+                if keysArray.contains("\(sender)_\(receiverUserNumberr ?? "")"){
+                    self.childPath = "\(sender ?? "")_\(receiverUserNumberr)"
                     
-                } else if keysArray.contains("\(self.receiverUserNumber)_\(sender)"){
+                } else if keysArray.contains("\(receiverUserNumberr)_\(sender)"){
                     print("True....\(keysArray)")
-                    self.childPath = "\(self.receiverUserNumber)_\(sender)"
+                    self.childPath = "\(receiverUserNumberr ?? "")_\(sender ?? "")"
                 }else{
-                    self.childPath = "\(sender)_\(self.receiverUserNumber)"
+                    self.childPath = "\(sender ?? "")_\(receiverUserNumberr ?? "")"
                     print("")
 
                 }
+                self.getPath()
             }
-            ref.child("user_chats").child(childPath).observe(.value) { snapshot in
-                // Debug: Print the raw snapshot value
-                self.arrOfUserMessageModel.removeAll()
-                self.messageDict.removeAll()
-                print("Snapshot value: \(snapshot.value ?? "nil")")
-                var messages = snapshot.value as? [Any]
-                dump(messages)
-          
-                
-                // Convert dictionary values to an array of dictionaries
-                let messagesArray = messages?.compactMap { $0 as? [String: Any] }
-                messagesArray?.forEach({ data in
-                    dump(data)
-                    self.messageDict.append(data)
-                    var arrOfUserMessageModel = userMessageModel(message: data["message"] as? String ?? "", receiver: data["receiver"] as? String ?? "", sender: data["sender"] as? String ?? "", timeStamp: data["timestamp"] as? String ?? "")
-                   
-                    self.arrOfUserMessageModel.append(arrOfUserMessageModel)
-                })
 
-                // Print or use the messages
-                print("Messages Array: \(arrOfUserMessageModel ?? [])")
-                
-            }
         
         }
-        
 
-//        ref.child("user_chats").child(childPath).observe(.value) { snapshot in
-//            // Debug: Print the raw snapshot value
-//            self.arrOfUserMessageModel.removeAll()
-//            self.messageDict.removeAll()
-//            print("Snapshot value: \(snapshot.value ?? "nil")")
-//            var messages = snapshot.value as? [Any]
-//            dump(messages)
-//      
-//            
-//            // Convert dictionary values to an array of dictionaries
-//            let messagesArray = messages?.compactMap { $0 as? [String: Any] }
-//            messagesArray?.forEach({ data in
-//                dump(data)
-//                self.messageDict.append(data)
-//                var arrOfUserMessageModel = userMessageModel(message: data["message"] as? String ?? "", receiver: data["receiver"] as? String ?? "", sender: data["sender"] as? String ?? "", timeStamp: data["timestamp"] as? String ?? "")
-//               
-//                self.arrOfUserMessageModel.append(arrOfUserMessageModel)
-//            })
-//
-//            // Print or use the messages
-//            print("Messages Array: \(arrOfUserMessageModel ?? [])")
-//            
-//        }
     }
         
+    func getPath(){
+        print(childPath)
+        ref.child("user_chats").child(childPath).observe(.value) { snapshot in
+            // Debug: Print the raw snapshot value
+            self.arrOfUserMessageModel.removeAll()
+            self.messageDict.removeAll()
+            print("Snapshot value: \(snapshot.value ?? "nil")")
+            var messages = snapshot.value as? [Any]
+            dump(messages)
+      
+            
+            // Convert dictionary values to an array of dictionaries
+            let messagesArray = messages?.compactMap { $0 as? [String: Any] }
+            messagesArray?.forEach({ data in
+                dump(data)
+                self.messageDict.append(data)
+                let arrOfUserMessageModel = userMessageModel(message: data["message"] as? String ?? "", receiver: data["receiver"] as? String ?? "", sender: data["sender"] as? String ?? "", timeStamp: data["timestamp"] as? String ?? "")
+               
+                self.arrOfUserMessageModel.append(arrOfUserMessageModel)
+            })
+
+            // Print or use the messages
+            print("Messages Array: \(arrOfUserMessageModel ?? [])")
+            
+        }
+    }
+    
         func sendMessage(){
-            var sender = self.sender
-            var receiver = self.receiverUserNumber
+            let sender = self.sender
+            let receiver = receiverUserNumberr
             let userData = [
                 "sender" : sender,
                 "receiver": receiver,
