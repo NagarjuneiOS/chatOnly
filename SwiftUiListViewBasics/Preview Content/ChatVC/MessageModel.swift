@@ -8,7 +8,7 @@
 import Foundation
 
 struct userMessageModel: Equatable,Identifiable{
-    var id: String { UUID().uuidString } 
+    var id = UUID()
     var message: String
     var receiver: String
     var sender: String

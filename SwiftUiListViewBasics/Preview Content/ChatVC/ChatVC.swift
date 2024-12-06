@@ -9,6 +9,7 @@ import SwiftUI
 import Firebase
 import FirebaseCore
 import FirebaseMessaging
+
 var receiverUserNumberr = ""
 
 struct ChatVC: View {
@@ -64,37 +65,31 @@ struct ChatVC: View {
         ZStack {
             Image(uiImage: UIImage(named: "twinlake")!)
                 .resizable()
-            
-            ScrollViewReader { scrollVieww in
-                List {
-                    
-                    ForEach(arrOfUserMessageModel,id: \.message) { model in
-                        
-                        if model.sender == sender{
-                          //  self.prints(data: model.message)
-                            SenderMsgRow(msg: model.message)
-                                    .listRowBackground(Color.clear)
-                            
-                        }else{
-                          //  self.prints(data: model.message)
+              //  .ignoresSafeArea()
 
-                            ReceiverMsgVieew(msg: model.message)
-                                .listRowBackground(Color.clear)
+            ScrollViewReader { scrollView in
+                ScrollView {
+                    LazyVStack {
+                        ForEach(arrOfUserMessageModel) { model in
+                            if model.sender == sender {
+                                SenderMsgRow(msg: model.message)
+                            } else {
+                                ReceiverMsgVieew(msg: model.message)
+                            }
                         }
                     }
-                    
-                    .id("lastmessage")
-                    
-                    
-                 
+                    .padding(.bottom,20)
+                    .id(arrOfUserMessageModel.last?.id) // Attach ID to the last message
                 }
-                
                 .listStyle(PlainListStyle())
                 .onChange(of: arrOfUserMessageModel) { _ in
-                                     if let lastMessage = arrOfUserMessageModel.last {
-                                         scrollVieww.scrollTo("lastmessage", anchor: .top)
-                                     }
-                                 }
+                    scrollToBottom(scrollView: scrollView)
+                }
+                .onAppear {
+                    getMessages {
+                        scrollToBottom(scrollView: scrollView)
+                    }
+                }
             }
         }
         HStack{
@@ -124,18 +119,18 @@ struct ChatVC: View {
                     }
             }
         }
-        .frame(height: 40)
+        .frame(height: 20)
         .padding()
         
         .onAppear {
             print("receiver number ->\(receiverUserNumberr)")
-            self.getMessages()
+         
         }
     }
     func prints(data: userMessageModel){
         print(data)
     }
-    func getMessages() {
+    func getMessages(_ completion: @escaping () -> Void) {
         var sender = self.sender
         print(self.sender)
         print(receiverUserNumberr)
@@ -155,13 +150,25 @@ struct ChatVC: View {
 
                 }
                 self.getPath()
+                    
+                
             }
 
         
         }
 
     }
-        
+    // Helper method to scroll to the bottom
+    private func scrollToBottom(scrollView: ScrollViewProxy) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            if let lastMessageId = arrOfUserMessageModel.last?.id {
+                print("Scrolling to last ID: \(lastMessageId)")
+                withAnimation {
+                    scrollView.scrollTo(lastMessageId, anchor: .bottom)
+                }
+            }
+        }
+    }
     func getPath(){
         print(childPath)
         ref.child("user_chats").child(childPath).observe(.value) { snapshot in
@@ -175,15 +182,18 @@ struct ChatVC: View {
             
             // Convert dictionary values to an array of dictionaries
             let messagesArray = messages?.compactMap { $0 as? [String: Any] }
-            messagesArray?.forEach({ data in
+            messagesArray?.enumerated().forEach({ index, data in
                 dump(data)
                 self.messageDict.append(data)
                 let arrOfUserMessageModel = userMessageModel(message: data["message"] as? String ?? "", receiver: data["receiver"] as? String ?? "", sender: data["sender"] as? String ?? "", timeStamp: data["timestamp"] as? String ?? "")
                
                 self.arrOfUserMessageModel.append(arrOfUserMessageModel)
+                if (messagesArray?.count ?? 0) - 1 == index{
+                }
             })
 
             // Print or use the messages
+           
             print("Messages Array: \(arrOfUserMessageModel ?? [])")
             
         }
@@ -220,3 +230,5 @@ struct ChatVC: View {
 #Preview {
     ChatVC()
 }
+
+
