@@ -133,6 +133,14 @@ struct LandMarkList: View {
         }
         
     }
+    func pushLogOut(){
+        self.reset()
+        NavigationLink(destination: WelcomeView()) {
+            
+        }
+           
+        
+    }
     func reset(){
         UserDefaults.standard.set("", forKey: "login_number")
         UserDefaults.standard.set("false", forKey: "loggedin")
