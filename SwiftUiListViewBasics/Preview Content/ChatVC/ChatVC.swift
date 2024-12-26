@@ -78,6 +78,7 @@ struct ChatVC: View {
                             }
                         }
                     }
+                    .padding(.top,20)
                     .padding(.bottom,20)
                     .id(arrOfUserMessageModel.last?.id) // Attach ID to the last message
                 }
@@ -152,6 +153,9 @@ struct ChatVC: View {
                 self.getPath()
                     
                 
+            }else{
+                self.childPath = "\(sender ?? "")_\(receiverUserNumberr ?? "")"
+
             }
 
         
@@ -213,6 +217,7 @@ struct ChatVC: View {
           //  var arrOfUserMessageModel = userMessageModel(message: userData["message"] as? String ?? "", receiver: userData["receiver"] as? String ?? "", sender: userData["sender"] as? String ?? "", timeStamp: userData["timestamp"] as? String ?? "")
            
           //  self.arrOfUserMessageModel.append(arrOfUserMessageModel)
+            
             ref.child("user_chats").child(childPath).setValue(self.messageDict){ error, _ in
                 if let error = error{
                     print(error)
