@@ -2,7 +2,7 @@
 //  UserModel.swift
 //  SwiftUiListViewBasics
 //
-//  Created by THE BANYAN INFOTECH on 09/11/24.
+//  Created by Nagarjune on 09/11/24.
 //
 
 import Foundation

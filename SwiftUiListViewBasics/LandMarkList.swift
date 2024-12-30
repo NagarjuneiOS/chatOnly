@@ -2,7 +2,7 @@
 //  LandMarkList.swift
 //  SwiftUiListViewBasics
 //
-//  Created by THE BANYAN INFOTECH on 22/10/24.
+//  Created by Nagarjune on 22/10/24.
 //
 
 import SwiftUI
@@ -18,6 +18,7 @@ struct LandMarkList: View {
     @State private var showAlertForAcceptRequest = false
     @State private var requestUpdateKey = ""
     @State private var receiverUserNumber = ""
+    @State private var navigateToSettings = false
     var body: some View {
         NavigationView{
             VStack(spacing: 0){
@@ -33,22 +34,27 @@ struct LandMarkList: View {
                             .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: -10))
                             .foregroundStyle(Color.pink)
                         
-                        NavigationLink(destination: WelcomeView()) {
-                            
+                        Button(action: {
+                            self.reset() // Call reset when the settings button is tapped
+                            self.navigateToSettings = true // Set flag to navigate to settings screen
+                        }) {
                             Image(uiImage: UIImage(named: "settings")!)
                                 .resizable()
                                 .renderingMode(.template)
-                                .frame(width: 25,height: 25)
+                                .frame(width: 25, height: 25)
                                 .foregroundStyle(Color.pink)
                                 .padding()
-                            
                         }
-                        .onTapGesture {
-                            self.reset()
-                        }
+                        .background(
+                            NavigationLink(destination: NewWelcomeView(), isActive: $navigateToSettings) {
+                                EmptyView()
+                            }
+                                .hidden()
+                        )
+                        
                         .navigationBarBackButtonHidden(true)
-                  
-                         
+                        
+                        
                     }
                     
                 }
@@ -85,21 +91,6 @@ struct LandMarkList: View {
         }
         .navigationBarBackButtonHidden(true)
         
-        //        .alert(isPresented: $showAlert) {
-        //            Alert(title: Text("Chat only"),message: Text(self.alertMessage),dismissButton: .default(Text("Ok"), action: {
-        //                self.showAlert = false
-        //
-        //            }))
-        //        }
-        //        .alert(isPresented:self.$showAlertForAcceptRequest){
-        //            Alert(title: Text("Chat only"), message: Text("User sent request to you, you may accept or reject the request"), primaryButton: .default(Text("decline"), action: {
-        //                self.handleRequestResponse(accept: false)
-        //            }), secondaryButton: .default(Text("Accept"), action: {
-        //                self.handleRequestResponse(accept: true)
-        //
-        //
-        //            }))
-        //        }
         .alert(isPresented: Binding<Bool>(
             get: { showAlert || showAlertForAcceptRequest },
             set: { _ in }
@@ -133,14 +124,7 @@ struct LandMarkList: View {
         }
         
     }
-    func pushLogOut(){
-        self.reset()
-        NavigationLink(destination: WelcomeView()) {
-            
-        }
-           
-        
-    }
+    
     func reset(){
         UserDefaults.standard.set("", forKey: "login_number")
         UserDefaults.standard.set("false", forKey: "loggedin")
@@ -190,17 +174,17 @@ struct LandMarkList: View {
                     }
                     
                 }else{
-//                    ref.child("request_list").child("\("\(self.userNumber ?? "")-\(userModel.number ?? "")")").setValue("request_sent"){ error ,_ in
-//                        if let error = error{
-//                            print("error")
-//                        }else{
-//                            print("Request sent successfully")
-//                            self.showAlert = true
-//                            self.alertMessage = "Request sent successfully"
-//                            
-//                        }
-//                        
-//                    }
+                    //                    ref.child("request_list").child("\("\(self.userNumber ?? "")-\(userModel.number ?? "")")").setValue("request_sent"){ error ,_ in
+                    //                        if let error = error{
+                    //                            print("error")
+                    //                        }else{
+                    //                            print("Request sent successfully")
+                    //                            self.showAlert = true
+                    //                            self.alertMessage = "Request sent successfully"
+                    //
+                    //                        }
+                    //
+                    //                    }
                 }
             }
             

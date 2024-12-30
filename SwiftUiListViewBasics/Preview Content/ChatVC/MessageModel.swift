@@ -2,7 +2,7 @@
 //  MessageModel.swift
 //  ChatOnly
 //
-//  Created by THE BANYAN INFOTECH on 26/11/24.
+//  Created by Nagarjune on 26/11/24.
 //
 
 import Foundation

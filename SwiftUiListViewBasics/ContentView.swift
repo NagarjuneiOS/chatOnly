@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  SwiftUiListViewBasics
 //
-//  Created by THE BANYAN INFOTECH on 17/10/24.
+//  Created by Nagarjune on 17/10/24.
 //
 
 import SwiftUI

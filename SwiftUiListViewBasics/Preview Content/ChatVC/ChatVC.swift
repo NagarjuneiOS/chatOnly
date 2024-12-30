@@ -2,7 +2,7 @@
 //  ChatVC.swift
 //  SwiftUiListViewBasics
 //
-//  Created by THE BANYAN INFOTECH on 25/10/24.
+//  Created by Nagarjune on 25/10/24.
 //
 
 import SwiftUI

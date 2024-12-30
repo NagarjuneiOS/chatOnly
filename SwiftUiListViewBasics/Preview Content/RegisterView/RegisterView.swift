@@ -2,7 +2,7 @@
 //  RegisterView.swift
 //  SwiftUiListViewBasics
 //
-//  Created by THE BANYAN INFOTECH on 06/11/24.
+//  Created by Nagarjune on 06/11/24.
 //
 
 import SwiftUI

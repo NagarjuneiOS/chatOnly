@@ -2,7 +2,7 @@
 //  RequestListModel.swift
 //  ChatOnly
 //
-//  Created by THE BANYAN INFOTECH on 15/11/24.
+//  Created by TNagarjune on 15/11/24.
 //
 
 struct RequestListModel{

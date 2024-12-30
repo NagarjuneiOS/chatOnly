@@ -2,7 +2,7 @@
 //  Untitled.swift
 //  SwiftUiListViewBasics
 //
-//  Created by THE BANYAN INFOTECH on 07/11/24.
+//  Created by Nagarjune on 07/11/24.
 //
 import Foundation
 import UIKit
