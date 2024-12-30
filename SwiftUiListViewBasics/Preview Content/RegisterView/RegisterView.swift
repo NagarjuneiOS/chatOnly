@@ -22,6 +22,8 @@ struct RegisterView: View {
     @State var alertTitle = "Chat only"
     @State var alertMsg = "Entered phone number already registered"
     @State var isShowAlert = false
+    @State var navigateToChat = false
+    @State var navigationAlert = false
     var ref: DatabaseReference! = Database.database().reference() // Initialize Firebase Database reference
 
     var body: some View {
@@ -195,9 +197,19 @@ struct RegisterView: View {
                     }
                     
                 }
+                .alert(isPresented: $navigationAlert) {
+                    Alert(title: Text(alertTitle),message: Text(alertMsg),dismissButton: .default(Text("Ok"), action: {
+                        UserDefaults.standard.set(self.number, forKey: "login_number")
+                        UserDefaults.standard.set("true", forKey: "loggedin")
+                        self.navigateToChat = true
+                    }) )
+                }
                 
             }
-            
+
+            .navigationDestination(isPresented: $navigateToChat, destination: {
+                LandMarkList()
+            })
             .navigationBarBackButtonHidden(true)
             .onAppear {
                 
@@ -249,6 +261,8 @@ struct RegisterView: View {
                 print(error)
             }else{
                 print("User registered success")
+                self.navigationAlert = true
+                self.alertMsg = "Your registration seems successful"
             }
             
         }

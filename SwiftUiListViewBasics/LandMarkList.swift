@@ -34,10 +34,24 @@ struct LandMarkList: View {
                             .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: -10))
                             .foregroundStyle(Color.pink)
                         
-                        Button(action: {
-                            self.reset() // Call reset when the settings button is tapped
-                            self.navigateToSettings = true // Set flag to navigate to settings screen
-                        }) {
+                        Menu {
+                            Button {
+                                print("Logout button tapped")
+                                self.reset() // Call reset when the settings button is tapped
+                                self.navigateToSettings = true
+                                
+                            } label: {
+                                Text("Logout")
+                                Image("switch")
+                            }
+                           
+                            
+                            
+
+                            
+
+                            
+                        } label: {
                             Image(uiImage: UIImage(named: "settings")!)
                                 .resizable()
                                 .renderingMode(.template)
@@ -45,13 +59,12 @@ struct LandMarkList: View {
                                 .foregroundStyle(Color.pink)
                                 .padding()
                         }
-                        .background(
-                            NavigationLink(destination: NewWelcomeView(), isActive: $navigateToSettings) {
-                                EmptyView()
-                            }
-                                .hidden()
-                        )
+
                         
+                        
+                           
+                        
+                      
                         .navigationBarBackButtonHidden(true)
                         
                         
@@ -84,6 +97,10 @@ struct LandMarkList: View {
                 .padding(EdgeInsets(top: 0, leading: -10, bottom: 0, trailing: -20))
                 NavigationLink(destination: ChatVC(),isActive: $navigateToChat) {
                     
+                }
+                .hidden()
+                .navigationDestination(isPresented: $navigateToSettings) {
+                    NewWelcomeView()
                 }
                 .hidden()
                 
@@ -160,31 +177,32 @@ struct LandMarkList: View {
                         self.showAlert = true
                         self.navigateToChat = false
                     default:
-                        ref.child("request_list").child("\("\(self.userNumber ?? "")-\(userModel.number ?? "")")").setValue("request_sent"){ error ,_ in
-                            if let error = error{
-                                print("error")
-                            }else{
-                                print("Request sent successfully")
-                                self.showAlert = true
-                                self.alertMessage = "Request sent successfully"
-                                
-                            }
-                            
-                        }
+//                        ref.child("request_list").child("\("\(self.userNumber ?? "")-\(userModel.number ?? "")")").setValue("request_sent"){ error ,_ in
+//                            if let error = error{
+//                                print("error")
+//                            }else{
+//                                print("Request sent successfully")
+//                                self.showAlert = true
+//                                self.alertMessage = "Request sent successfully"
+//                                
+//                            }
+//                            
+//                        }
+                        break
                     }
                     
                 }else{
-                    //                    ref.child("request_list").child("\("\(self.userNumber ?? "")-\(userModel.number ?? "")")").setValue("request_sent"){ error ,_ in
-                    //                        if let error = error{
-                    //                            print("error")
-                    //                        }else{
-                    //                            print("Request sent successfully")
-                    //                            self.showAlert = true
-                    //                            self.alertMessage = "Request sent successfully"
-                    //
-                    //                        }
-                    //
-                    //                    }
+                                        ref.child("request_list").child("\("\(self.userNumber ?? "")-\(userModel.number ?? "")")").setValue("request_sent"){ error ,_ in
+                                            if let error = error{
+                                                print("error")
+                                            }else{
+                                                print("Request sent successfully")
+                                                self.showAlert = true
+                                                self.alertMessage = "Request sent successfully"
+                    
+                                            }
+                    
+                                        }
                 }
             }
             
