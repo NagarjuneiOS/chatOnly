@@ -169,6 +169,8 @@ struct NewWelcomeView: View {
             .padding(.top, 20)
         }
         .onAppear {
+            self.userName = ""
+            self.passWord = ""
             self.fetchUserDetails()
         }
         .navigationBarBackButtonHidden(true)
@@ -208,6 +210,7 @@ struct NewWelcomeView: View {
             alertMessge = "Please enter the valid credencials"
         }
             else{
+                print(self.userName)
             UserDefaults.standard.set(self.userName, forKey: "login_number")
             UserDefaults.standard.set("true", forKey: "loggedin")
             alertMessge = "login successful"

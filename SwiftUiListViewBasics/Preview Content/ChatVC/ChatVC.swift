@@ -10,7 +10,8 @@ import Firebase
 import FirebaseCore
 import FirebaseMessaging
 
-var receiverUserNumberr = ""
+var receiverUserNumberr: String? = "123456"
+var receiverName: String? = "Test User"
 
 struct ChatVC: View {
     @Environment(\.presentationMode) var presentationMode // Access to presentation mode
@@ -24,6 +25,9 @@ struct ChatVC: View {
     
     
     var body: some View {
+        NavigationStack {
+        
+        
         HStack(){
             Image(uiImage: UIImage(named: "back")!)
                 .resizable()           // Makes the image resizable
@@ -36,11 +40,15 @@ struct ChatVC: View {
                     presentationMode.wrappedValue.dismiss()
                 }
             
-             
-            Text(receiverUserNumberr)
-                    .font(.title)
-                    .fontDesign(.rounded)
-                    .padding()
+            VStack(){
+                Text("\(receiverName!) (\(receiverUserNumberr!))")
+                    .font(.title2)
+                   .fontDesign(.rounded)
+               
+            }
+           
+            
+            
             
             Spacer()
                 .background(Color.purple)
@@ -65,8 +73,8 @@ struct ChatVC: View {
         ZStack {
             Image(uiImage: UIImage(named: "twinlake")!)
                 .resizable()
-              //  .ignoresSafeArea()
-
+            //  .ignoresSafeArea()
+            
             ScrollViewReader { scrollView in
                 ScrollView {
                     LazyVStack {
@@ -96,7 +104,7 @@ struct ChatVC: View {
         HStack{
             TextField("Enter message", text: $message)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-               // .padding()
+            // .padding()
                 .frame(height: 60)
             ZStack {
                 // Blue Circle
@@ -124,86 +132,89 @@ struct ChatVC: View {
         .padding()
         
         .onAppear {
-            print("receiver number ->\(receiverUserNumberr)")
-         
+            print("sender number ->\(self.sender)receiver number ->\(receiverUserNumberr)")
+            
         }
     }
-    func prints(data: userMessageModel){
-        print(data)
-    }
-    func getMessages(_ completion: @escaping () -> Void) {
-        var sender = self.sender
-        print(self.sender)
-        print(receiverUserNumberr)
-        
-        ref.child("user_chats").observe(.value) { snapshot in
-            if let userChats = snapshot.value as? [String: Any]{
-                var keysArray = userChats.compactMap { $0.key }
-                if keysArray.contains("\(sender)_\(receiverUserNumberr ?? "")"){
-                    self.childPath = "\(sender ?? "")_\(receiverUserNumberr)"
+        }
+        func prints(data: userMessageModel){
+            print(data)
+        }
+        func getMessages(_ completion: @escaping () -> Void) {
+            var sender = self.sender
+            print(self.sender)
+            print(receiverUserNumberr)
+            
+            ref.child("user_chats").observe(.value) { snapshot in
+                if let userChats = snapshot.value as? [String: Any]{
+                    var keysArray = userChats.compactMap { $0.key }
+                    if keysArray.contains("\(sender)_\(receiverUserNumberr ?? "")"){
+                        self.childPath = "\(sender ?? "")_\(receiverUserNumberr)"
+                        
+                    } else if keysArray.contains("\(receiverUserNumberr)_\(sender)"){
+                        print("True....\(keysArray)")
+                        self.childPath = "\(receiverUserNumberr ?? "")_\(sender ?? "")"
+                    }else{
+                        self.childPath = "\(sender ?? "")_\(receiverUserNumberr ?? "")"
+                        print("")
+                        
+                    }
+                    self.getPath()
                     
-                } else if keysArray.contains("\(receiverUserNumberr)_\(sender)"){
-                    print("True....\(keysArray)")
-                    self.childPath = "\(receiverUserNumberr ?? "")_\(sender ?? "")"
+                    
                 }else{
                     self.childPath = "\(sender ?? "")_\(receiverUserNumberr ?? "")"
-                    print("")
-
-                }
-                self.getPath()
                     
+                }
                 
-            }else{
-                self.childPath = "\(sender ?? "")_\(receiverUserNumberr ?? "")"
-
+                
             }
-
+            
+        }
+        // Helper method to scroll to the bottom
+        private func scrollToBottom(scrollView: ScrollViewProxy) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                if let lastMessageId = arrOfUserMessageModel.last?.id {
+                    print("Scrolling to last ID: \(lastMessageId)")
+                    withAnimation {
+                        scrollView.scrollTo(lastMessageId, anchor: .bottom)
+                    }
+                }
+            }
+        }
+        func getPath(){
+            print(childPath)
+            ref.child("user_chats").child(childPath).observe(.value) { snapshot in
+                // Debug: Print the raw snapshot value
+                self.arrOfUserMessageModel.removeAll()
+                self.messageDict.removeAll()
+                print("Snapshot value: \(snapshot.value ?? "nil")")
+                var messages = snapshot.value as? [Any]
+                dump(messages)
+                
+                
+                // Convert dictionary values to an array of dictionaries
+                let messagesArray = messages?.compactMap { $0 as? [String: Any] }
+                messagesArray?.enumerated().forEach({ index, data in
+                    dump(data)
+                    self.messageDict.append(data)
+                    let arrOfUserMessageModel = userMessageModel(message: data["message"] as? String ?? "", receiver: data["receiver"] as? String ?? "", sender: data["sender"] as? String ?? "", timeStamp: data["timestamp"] as? String ?? "")
+                    
+                    self.arrOfUserMessageModel.append(arrOfUserMessageModel)
+                    if (messagesArray?.count ?? 0) - 1 == index{
+                    }
+                })
+                
+                // Print or use the messages
+                
+                print("Messages Array: \(arrOfUserMessageModel ?? [])")
+                
+            }
+        }
         
-        }
-
-    }
-    // Helper method to scroll to the bottom
-    private func scrollToBottom(scrollView: ScrollViewProxy) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            if let lastMessageId = arrOfUserMessageModel.last?.id {
-                print("Scrolling to last ID: \(lastMessageId)")
-                withAnimation {
-                    scrollView.scrollTo(lastMessageId, anchor: .bottom)
-                }
-            }
-        }
-    }
-    func getPath(){
-        print(childPath)
-        ref.child("user_chats").child(childPath).observe(.value) { snapshot in
-            // Debug: Print the raw snapshot value
-            self.arrOfUserMessageModel.removeAll()
-            self.messageDict.removeAll()
-            print("Snapshot value: \(snapshot.value ?? "nil")")
-            var messages = snapshot.value as? [Any]
-            dump(messages)
-      
-            
-            // Convert dictionary values to an array of dictionaries
-            let messagesArray = messages?.compactMap { $0 as? [String: Any] }
-            messagesArray?.enumerated().forEach({ index, data in
-                dump(data)
-                self.messageDict.append(data)
-                let arrOfUserMessageModel = userMessageModel(message: data["message"] as? String ?? "", receiver: data["receiver"] as? String ?? "", sender: data["sender"] as? String ?? "", timeStamp: data["timestamp"] as? String ?? "")
-               
-                self.arrOfUserMessageModel.append(arrOfUserMessageModel)
-                if (messagesArray?.count ?? 0) - 1 == index{
-                }
-            })
-
-            // Print or use the messages
-           
-            print("Messages Array: \(arrOfUserMessageModel ?? [])")
-            
-        }
-    }
-    
         func sendMessage(){
+            print(self.sender)
+            print(receiverUserNumberr)
             let sender = self.sender
             let receiver = receiverUserNumberr
             let userData = [
@@ -214,9 +225,9 @@ struct ChatVC: View {
             ] as [String : Any]
             
             self.messageDict.append(userData)
-          //  var arrOfUserMessageModel = userMessageModel(message: userData["message"] as? String ?? "", receiver: userData["receiver"] as? String ?? "", sender: userData["sender"] as? String ?? "", timeStamp: userData["timestamp"] as? String ?? "")
-           
-          //  self.arrOfUserMessageModel.append(arrOfUserMessageModel)
+            //  var arrOfUserMessageModel = userMessageModel(message: userData["message"] as? String ?? "", receiver: userData["receiver"] as? String ?? "", sender: userData["sender"] as? String ?? "", timeStamp: userData["timestamp"] as? String ?? "")
+            
+            //  self.arrOfUserMessageModel.append(arrOfUserMessageModel)
             
             ref.child("user_chats").child(childPath).setValue(self.messageDict){ error, _ in
                 if let error = error{
@@ -227,9 +238,9 @@ struct ChatVC: View {
                 
             }
             
+            
         
     }
- 
 }
 
 #Preview {

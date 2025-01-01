@@ -19,20 +19,31 @@ struct LandMarkList: View {
     @State private var requestUpdateKey = ""
     @State private var receiverUserNumber = ""
     @State private var navigateToSettings = false
+    @State private var username: String = ""
     var body: some View {
-        NavigationView{
+        NavigationStack{
             VStack(spacing: 0){
-                HStack(){
+                VStack(spacing: -20){
+                    
                     Text("Chat Only")
                         .font(.title)
                         .fontWeight(.heavy)
                         .foregroundStyle(Color.pink)
-                        .padding()
+                HStack(){
+                    
+                    
+                    VStack(spacing: 0){
+                        Text("Hi \(username), Welcome back")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .foregroundStyle(Color.black)
+                            .padding()
+                        
+                    }
+                    
                     Spacer()
                     HStack(spacing: 20) {
-                        Image(systemName: "camera")
-                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: -10))
-                            .foregroundStyle(Color.pink)
+                        
                         
                         Menu {
                             Button {
@@ -44,12 +55,12 @@ struct LandMarkList: View {
                                 Text("Logout")
                                 Image("switch")
                             }
-                           
                             
                             
-
                             
-
+                            
+                            
+                            
                             
                         } label: {
                             Image(uiImage: UIImage(named: "settings")!)
@@ -59,12 +70,7 @@ struct LandMarkList: View {
                                 .foregroundStyle(Color.pink)
                                 .padding()
                         }
-
                         
-                        
-                           
-                        
-                      
                         .navigationBarBackButtonHidden(true)
                         
                         
@@ -72,6 +78,7 @@ struct LandMarkList: View {
                     
                 }
                 .padding(.top)
+            }
                 Divider()
                 List(usersModel, id: \.number){ userModel in
                     
@@ -150,61 +157,60 @@ struct LandMarkList: View {
     func sendRequestToUsers(userModel: UsersModel ,completion: () -> ()){
         print((userModel.number ?? "") as String)
         if self.requestListModel.count > 0{
-            var req = self.requestListModel.forEach { RequestListModel in
-                print(RequestListModel.key ?? "")
-                print("\(self.userNumber ?? "")-\(userModel.number ?? "")")
-                print("\(userModel.number ?? "")-\(self.userNumber ?? "")")
-                
-                if (RequestListModel.key ?? "" == "\(self.userNumber ?? "")-\(userModel.number ?? "")") || (RequestListModel.key ?? "" == "\(userModel.number ?? "")-\(self.userNumber ?? "")"){
-                    
-                    switch RequestListModel.value{
-                    case "request_sent":
-                        
-                        if (RequestListModel.key ?? "" == "\(self.userNumber)-\(userModel.number ?? "")"){
-                            self.showAlert = true
-                            self.alertMessage = "Request already sent please wait for your friend accept your request"
-                        }else{
-                            self.requestUpdateKey = RequestListModel.key ?? ""
-                            self.showAlertForAcceptRequest = true
-                            
-                        }
-                        
-                        
-                    case "request_accepted":
-                        self.showAlert = false
-                        self.navigateToChat = true
-                    case "request_declined":
-                        self.showAlert = true
-                        self.navigateToChat = false
-                    default:
-//                        ref.child("request_list").child("\("\(self.userNumber ?? "")-\(userModel.number ?? "")")").setValue("request_sent"){ error ,_ in
-//                            if let error = error{
-//                                print("error")
-//                            }else{
-//                                print("Request sent successfully")
-//                                self.showAlert = true
-//                                self.alertMessage = "Request sent successfully"
-//                                
-//                            }
-//                            
-//                        }
-                        break
-                    }
-                    
-                }else{
-                                        ref.child("request_list").child("\("\(self.userNumber ?? "")-\(userModel.number ?? "")")").setValue("request_sent"){ error ,_ in
-                                            if let error = error{
-                                                print("error")
-                                            }else{
-                                                print("Request sent successfully")
-                                                self.showAlert = true
-                                                self.alertMessage = "Request sent successfully"
-                    
-                                            }
-                    
-                                        }
+            var key = ""
+            var value = ""
+            var getKey = self.requestListModel.compactMap { $0.key}
+            if getKey.contains("\(self.userNumber)-\(userModel.number ?? "")") {
+                key = "\(self.userNumber)-\(userModel.number ?? "")"
+            }else if getKey.contains("\(userModel.number ?? "")-\(self.userNumber)"){
+               key = "\(userModel.number ?? "")-\(self.userNumber)"
+            }
+            
+            self.requestListModel.forEach { RequestListModel in
+                if RequestListModel.key == key{
+                    value = RequestListModel.value ?? ""
                 }
             }
+            
+            
+                
+                switch value{
+                case "request_sent":
+                    
+                    if (key == "\(self.userNumber)-\(userModel.number ?? "")"){
+                        self.showAlert = true
+                        self.alertMessage = "Request already sent please wait for your friend accept your request"
+                    }else{
+                        self.requestUpdateKey = key
+                        self.showAlertForAcceptRequest = true
+                        
+                    }
+                    
+                    break
+                case "request_accepted":
+                    self.showAlert = false
+                    self.navigateToChat = true
+                    break
+                case "request_declined":
+                    self.showAlert = true
+                    self.navigateToChat = false
+                    break
+                default:
+                    ref.child("request_list").child("\("\(self.userNumber)-\(userModel.number ?? "")")").setValue("request_sent"){ error ,_ in
+                            if let error = error{
+                                print("error")
+                            }else{
+                                print("Request sent successfully")
+                                self.showAlert = true
+                                self.alertMessage = "Request sent successfully"
+
+                            }
+
+                        }
+                    break
+                }
+ 
+            
             
         }else{
             ref.child("request_list").child("\("\(self.userNumber ?? "")-\(userModel.number ?? "")")").setValue("request_sent"){ error ,_ in
@@ -241,6 +247,8 @@ struct LandMarkList: View {
                     if self.userNumber != number{
                         var tempUserModel = UsersModel(firstName: firstName,lastName: lastName,number: number,password: password,timeStamp: time)
                         usersModel.append(tempUserModel)
+                    }else{
+                        self.username = firstName
                     }
                     
                 }
