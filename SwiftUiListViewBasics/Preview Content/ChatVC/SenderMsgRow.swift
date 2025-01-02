@@ -16,7 +16,7 @@ struct SenderMsgRow: View {
             Text(self.msg ?? "")
                 .padding(.vertical, 10)
                 .padding(.horizontal, 10)
-                .background(Color.cyan)
+                .background(Color.purple.opacity(0.5))
                 .cornerRadius(10)
                 .foregroundStyle(Color.white)
                 .fixedSize(horizontal: false, vertical: true)

@@ -16,7 +16,7 @@ struct ReceiverMsgVieew: View {
             Text(self.msg ?? "")
                 .padding(.horizontal,10)
                 .padding(.vertical,10)
-                .background(Color.cyan)
+                .background(Color.pink.opacity(0.5))
                 .cornerRadius(10)
                 .foregroundStyle(Color.white)
                 .fixedSize(horizontal: false, vertical: true)

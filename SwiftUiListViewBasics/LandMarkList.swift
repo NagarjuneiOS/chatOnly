@@ -1,12 +1,4 @@
-//
-//  LandMarkList.swift
-//  SwiftUiListViewBasics
-//
-//  Created by Nagarjune on 22/10/24.
-//
-
 import SwiftUI
-
 
 struct LandMarkList: View {
     @State var usersModel = [UsersModel]()
@@ -20,101 +12,79 @@ struct LandMarkList: View {
     @State private var receiverUserNumber = ""
     @State private var navigateToSettings = false
     @State private var username: String = ""
+    
     var body: some View {
-        NavigationStack{
-            VStack(spacing: 0){
-                VStack(spacing: -20){
-                    
-                    Text("Chat Only")
-                        .font(.title)
-                        .fontWeight(.heavy)
-                        .foregroundStyle(Color.pink)
-                HStack(){
-                    
-                    
-                    VStack(spacing: 0){
-                        Text("Hi \(username), Welcome back")
-                            .font(.title3)
-                            .fontWeight(.bold)
-                            .foregroundStyle(Color.black)
-                            .padding()
-                        
-                    }
-                    
-                    Spacer()
-                    HStack(spacing: 20) {
-                        
-                        
-                        Menu {
-                            Button {
-                                print("Logout button tapped")
-                                self.reset() // Call reset when the settings button is tapped
-                                self.navigateToSettings = true
-                                
-                            } label: {
-                                Text("Logout")
-                                Image("switch")
-                            }
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                        } label: {
-                            Image(uiImage: UIImage(named: "settings")!)
-                                .resizable()
-                                .renderingMode(.template)
-                                .frame(width: 25, height: 25)
-                                .foregroundStyle(Color.pink)
-                                .padding()
-                        }
-                        
-                        .navigationBarBackButtonHidden(true)
-                        
-                        
-                    }
-                    
-                }
-                .padding(.top)
-            }
-                Divider()
-                List(usersModel, id: \.number){ userModel in
-                    
-                    Button {
-                        self.receiverUserNumber = userModel.number ?? ""
-                        receiverUserNumberr = userModel.number ?? ""
-                        sendRequestToUsers(userModel: userModel) {
-                            
-                        }
-                        
-                    } label: {
-                        LandmarkView(userData: userModel)
-                        
-                    }
-                    
-                    
-                    
-                    
-                    
-                    
-                }
-                .listStyle(PlainListStyle())
-                .padding(EdgeInsets(top: 0, leading: -10, bottom: 0, trailing: -20))
-                NavigationLink(destination: ChatVC(),isActive: $navigateToChat) {
-                    
-                }
-                .hidden()
-                .navigationDestination(isPresented: $navigateToSettings) {
-                    NewWelcomeView()
-                }
-                .hidden()
+        NavigationStack {
+            ZStack {
+                LinearGradient(colors: [Color.pink.opacity(0.2)], startPoint: .top, endPoint: .bottom)
+                    .ignoresSafeArea()
                 
+                VStack(spacing: 0) {
+                    VStack(spacing: -20) {
+                        Text("Chat Only")
+                            .font(.title)
+                            .fontWeight(.heavy)
+                            .foregroundStyle(Color.pink)
+                        
+                        HStack() {
+                            VStack(spacing: 0) {
+                                Text("Hi \(username), Welcome back")
+                                    .font(.title3)
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(Color.black)
+                                    .padding()
+                            }
+                            Spacer()
+                            
+                            HStack(spacing: 20) {
+                                Menu {
+                                    Button {
+                                        print("Logout button tapped")
+                                        self.reset() // Call reset when the settings button is tapped
+                                        self.navigateToSettings = true
+                                    } label: {
+                                        Text("Logout")
+                                        Image("switch")
+                                    }
+                                } label: {
+                                    Image(uiImage: UIImage(named: "settings")!)
+                                        .resizable()
+                                        .renderingMode(.template)
+                                        .frame(width: 25, height: 25)
+                                        .foregroundStyle(Color.pink)
+                                        .padding()
+                                }
+                            }
+                        }
+                        .padding(.top)
+                    }
+                    Divider()
+                    
+                    List(usersModel, id: \.number) { userModel in
+                        Button {
+                            self.receiverUserNumber = userModel.number ?? ""
+                            receiverUserNumberr = userModel.number ?? ""
+                            sendRequestToUsers(userModel: userModel) {}
+                        } label: {
+                            LandmarkView(userData: userModel)
+
+                        }
+                        .buttonStyle(PlainButtonStyle()) // Prevents automatic button styling changes
+                        .listRowInsets(EdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 10)) // Remove padding between list rows
+                    }
+                    .listStyle(PlainListStyle())
+                    .padding(EdgeInsets(top: 10, leading: -20, bottom: 0, trailing: -20))
+                    
+                    NavigationLink(destination: ChatVC(), isActive: $navigateToChat) {}
+                        .hidden()
+                    .navigationDestination(isPresented: $navigateToSettings) {
+                        NewWelcomeView()
+                    }
+                    .hidden()
+                }
             }
         }
         .navigationBarBackButtonHidden(true)
-        
         .alert(isPresented: Binding<Bool>(
             get: { showAlert || showAlertForAcceptRequest },
             set: { _ in }
@@ -140,7 +110,6 @@ struct LandMarkList: View {
                 )
             }
         }
-        
         .onAppear {
             self.userNumber = UserDefaults.standard.value(forKey: "login_number") as? String ?? ""
             self.fetchUserDetails()
@@ -148,8 +117,8 @@ struct LandMarkList: View {
         }
         
     }
-    
-    func reset(){
+
+    func reset() {
         UserDefaults.standard.set("", forKey: "login_number")
         UserDefaults.standard.set("false", forKey: "loggedin")
     }

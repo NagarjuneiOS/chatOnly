@@ -17,6 +17,10 @@ struct NewWelcomeView: View {
     var body: some View {
         
         NavigationStack {
+            ZStack{
+                LinearGradient(colors: [Color.pink.opacity(0.2),Color.purple.opacity(0.5)], startPoint: .top, endPoint: .bottom)
+
+                            .ignoresSafeArea()
             Spacer()
             VStack(spacing: 20) {
                 // Logo or Image
@@ -39,9 +43,9 @@ struct NewWelcomeView: View {
                         .font(.subheadline)
                         .foregroundStyle(Color.gray)
                 }
-               
                 
-              
+                
+                
                 
                 // Phone Number TextField
                 VStack(spacing: 20) {
@@ -105,7 +109,7 @@ struct NewWelcomeView: View {
                                 .font(.caption)
                                 .foregroundColor(.teal)
                                 .frame(width: 200, height: 20)
-                               // .background(Color.blue)
+                            // .background(Color.blue)
                                 .cornerRadius(10)
                         }
                     }
@@ -134,39 +138,40 @@ struct NewWelcomeView: View {
                             }))
                         }
                     }
-                  
+                    
                     
                     Text("Or")
                         .font(.headline)
                         .padding()
                     
                     NavigationLink(destination: RegisterView()) {
-                      
-                            
-                            Text("Sign Up")
-                                
-                                .font(.headline)
-                                .foregroundColor(.pink)
-                                .frame(width: 300, height: 50)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(Color.pink, lineWidth: 1)  // Border with color
-                                )
-                               
-                               
-                            
+                        
+                        
+                        Text("Sign Up")
+                        
+                            .font(.headline)
+                            .foregroundColor(.pink)
+                            .frame(width: 300, height: 50)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color.pink, lineWidth: 1)  // Border with color
+                            )
+                        
+                        
+                        
                         
                     }
-                   
-
-                        
+                    
+                    
+                    
                 }
                 
                 
                 Spacer()
             }
-
             .padding(.top, 20)
+        }
+            
         }
         .onAppear {
             self.userName = ""

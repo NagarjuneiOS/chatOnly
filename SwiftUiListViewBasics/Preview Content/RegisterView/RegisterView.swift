@@ -30,181 +30,194 @@ struct RegisterView: View {
       
             NavigationStack{
                 
-                
-                HStack{
+                VStack(spacing: 0) {
+                    
+                    
+                    
                     HStack{
-                        Image(uiImage: UIImage(named: "back")!)
-                            .resizable()
-                            .frame(width: 30,height: 30)
-                            .padding()
-                            .onTapGesture {
-                                presentationMode.wrappedValue.dismiss()
-                            }
-                    }
-                    Text("Register")
-                        .fontDesign(.default)
-                        .font(.system(size: 30))
-                        .fontWeight(.black)
-                    
-                        .foregroundColor(Color.pink)
-                    Spacer()
-                    
-                }
-                .padding(.top,-10)
-                ScrollView{
-                    
-                    VStack{
-                        VStack(spacing: -20){
-                            HStack{
-                                Text("first name")
-                                    .font(.subheadline)
-                                    .fontWeight(.semibold)
-                                    .padding()
-                                    .foregroundStyle(.gray)
-                                Spacer()
-                            }
-                            HStack{
-                                TextField("Enter First name",text: $firstName)
-                                // .padding(.horizontal, 10)
-                                    .frame(height: 50) // Increased height for username field
-                                    .background(Color(.systemGray6)) // Optional background color
-                                    .cornerRadius(8)
-                                
-                                    .padding()
-                            }
-                            
-                            
+                        HStack{
+                            Image(uiImage: UIImage(named: "back")!)
+                                .resizable()
+                                .frame(width: 30,height: 30)
+                                .padding()
+                                .onTapGesture {
+                                    presentationMode.wrappedValue.dismiss()
+                                }
                         }
-                        VStack(spacing: -20){
-                            HStack{
-                                Text("Last name")
-                                    .font(.subheadline)
-                                    .fontWeight(.semibold)
-                                    .padding()
-                                    .foregroundStyle(.gray)
-                                Spacer()
-                            }
-                            HStack{
-                                TextField("Enter Last name",text: $lastName)
-                                // .padding(.horizontal, 10)
-                                    .frame(height: 50) // Increased height for username field
-                                    .background(Color(.systemGray6)) // Optional background color
-                                    .cornerRadius(8)
-                                
-                                    .padding()
-                            }
-                            
-                            
-                        }
-                        VStack(spacing: -20){
-                            HStack{
-                                Text("Phone number")
-                                    .font(.subheadline)
-                                    .fontWeight(.semibold)
-                                    .padding()
-                                    .foregroundStyle(.gray)
-                                Spacer()
-                            }
-                            HStack{
-                                TextField("Enter Phone Number",text: $number)
-                                // .padding(.horizontal, 10)
-                                    .frame(height: 50) // Increased height for username field
-                                    .background(Color(.systemGray6)) // Optional background color
-                                    .cornerRadius(8)
-                                
-                                    .padding()
-                            }
-                            
-                            
-                        }
-                        VStack(spacing: -20){
-                            HStack{
-                                Text("Password")
-                                    .font(.subheadline)
-                                    .fontWeight(.semibold)
-                                    .padding()
-                                    .foregroundStyle(.gray)
-                                Spacer()
-                            }
-                            HStack{
-                                TextField("Enter Password",text: $passWord)
-                                // .padding(.horizontal, 10)
-                                    .frame(height: 50) // Increased height for username field
-                                    .background(Color(.systemGray6)) // Optional background color
-                                    .cornerRadius(8)
-                                
-                                    .padding()
-                            }
-                            
-                            
-                        }
-                        VStack(spacing: -20){
-                            HStack{
-                                Text("Confirm Password")
-                                    .font(.subheadline)
-                                    .fontWeight(.semibold)
-                                    .padding()
-                                    .foregroundStyle(.gray)
-                                Spacer()
-                            }
-                            HStack{
-                                TextField("Enter confirm Password",text: $confirmPassword)
-                                // .padding(.horizontal, 10)
-                                    .frame(height: 50) // Increased height for username field
-                                    .background(Color(.systemGray6)) // Optional background color
-                                    .cornerRadius(8)
-                                
-                                    .padding()
-                            }
-                            
-                            
-                        }
-                        
-                        
-                    }
-                    Spacer()
-                    
-                    Button {
-                        print("Register button tapped")
-                        self.checkAuthentication { Bool in
-                            if Bool{
-                                self.registerUser()
-                                self.isShowAlert = false
-                                
-                            }else{
-                                self.isShowAlert = true
-                            }
-                        }
-                        
-                        
-                    } label: {
                         Text("Register")
-                            .font(.title)
-                            .fontWeight(.semibold)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 50)
-                            .background(Color.pink)
-                            .foregroundStyle(Color.white)
-                            .cornerRadius(10)
-                            .shadow(radius: 5)
-                            .padding()
-                            .font(.title)
+                            .fontDesign(.default)
+                            .font(.system(size: 30))
+                            .fontWeight(.black)
+                        
+                            .foregroundColor(Color.pink)
+                        Spacer()
                         
                     }
+                    .background(Color.pink.opacity(0.2))
+                    .padding(.top,0)
                     
-                    .alert(isPresented: $isShowAlert) {
-                        Alert(title: Text(alertTitle),message: Text(alertMsg),dismissButton: .default(Text("OK")))
+                    ZStack{
+                        LinearGradient(colors: [Color.pink.opacity(0.2),Color.purple.opacity(0.5)], startPoint: .top, endPoint: .bottom)
+                        
+                            .ignoresSafeArea()
+                        
+                        ScrollView{
+                            
+                            VStack{
+                                VStack(spacing: -20){
+                                    HStack{
+                                        Text("first name")
+                                            .font(.subheadline)
+                                            .fontWeight(.semibold)
+                                            .padding()
+                                            .foregroundStyle(.gray)
+                                        Spacer()
+                                    }
+                                    HStack{
+                                        TextField("Enter First name",text: $firstName)
+                                        // .padding(.horizontal, 10)
+                                            .frame(height: 50) // Increased height for username field
+                                            .background(Color(.systemGray6)) // Optional background color
+                                            .cornerRadius(8)
+                                        
+                                            .padding()
+                                    }
+                                    
+                                    
+                                }
+                                VStack(spacing: -20){
+                                    HStack{
+                                        Text("Last name")
+                                            .font(.subheadline)
+                                            .fontWeight(.semibold)
+                                            .padding()
+                                            .foregroundStyle(.gray)
+                                        Spacer()
+                                    }
+                                    HStack{
+                                        TextField("Enter Last name",text: $lastName)
+                                        // .padding(.horizontal, 10)
+                                            .frame(height: 50) // Increased height for username field
+                                            .background(Color(.systemGray6)) // Optional background color
+                                            .cornerRadius(8)
+                                        
+                                            .padding()
+                                    }
+                                    
+                                    
+                                }
+                                VStack(spacing: -20){
+                                    HStack{
+                                        Text("Phone number")
+                                            .font(.subheadline)
+                                            .fontWeight(.semibold)
+                                            .padding()
+                                            .foregroundStyle(.gray)
+                                        Spacer()
+                                    }
+                                    HStack{
+                                        TextField("Enter Phone Number",text: $number)
+                                        // .padding(.horizontal, 10)
+                                            .frame(height: 50) // Increased height for username field
+                                            .background(Color(.systemGray6)) // Optional background color
+                                            .cornerRadius(8)
+                                        
+                                            .padding()
+                                    }
+                                    
+                                    
+                                }
+                                VStack(spacing: -20){
+                                    HStack{
+                                        Text("Password")
+                                            .font(.subheadline)
+                                            .fontWeight(.semibold)
+                                            .padding()
+                                            .foregroundStyle(.gray)
+                                        Spacer()
+                                    }
+                                    HStack{
+                                        TextField("Enter Password",text: $passWord)
+                                        // .padding(.horizontal, 10)
+                                            .frame(height: 50) // Increased height for username field
+                                            .background(Color(.systemGray6)) // Optional background color
+                                            .cornerRadius(8)
+                                        
+                                            .padding()
+                                    }
+                                    
+                                    
+                                }
+                                VStack(spacing: -20){
+                                    HStack{
+                                        Text("Confirm Password")
+                                            .font(.subheadline)
+                                            .fontWeight(.semibold)
+                                            .padding()
+                                            .foregroundStyle(.gray)
+                                        Spacer()
+                                    }
+                                    HStack{
+                                        TextField("Enter confirm Password",text: $confirmPassword)
+                                        // .padding(.horizontal, 10)
+                                            .frame(height: 50) // Increased height for username field
+                                            .background(Color(.systemGray6)) // Optional background color
+                                            .cornerRadius(8)
+                                        
+                                            .padding()
+                                    }
+                                    
+                                    
+                                }
+                                
+                                
+                            }
+                            
+                            Spacer()
+                            
+                            Button {
+                                print("Register button tapped")
+                                self.checkAuthentication { Bool in
+                                    if Bool{
+                                        self.registerUser()
+                                        self.isShowAlert = false
+                                        
+                                    }else{
+                                        self.isShowAlert = true
+                                    }
+                                }
+                                
+                                
+                            } label: {
+                                Text("Register")
+                                    .font(.title)
+                                    .fontWeight(.semibold)
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 50)
+                                    .background(Color.pink)
+                                    .foregroundStyle(Color.white)
+                                    .cornerRadius(10)
+                                    .shadow(radius: 5)
+                                    .padding()
+                                    .font(.title)
+                                
+                            }
+                            
+                            .alert(isPresented: $isShowAlert) {
+                                Alert(title: Text(alertTitle),message: Text(alertMsg),dismissButton: .default(Text("OK")))
+                            }
+                            
+                        }
+                        
+                        .alert(isPresented: $navigationAlert) {
+                            Alert(title: Text(alertTitle),message: Text(alertMsg),dismissButton: .default(Text("Ok"), action: {
+                                UserDefaults.standard.set(self.number, forKey: "login_number")
+                                UserDefaults.standard.set("true", forKey: "loggedin")
+                                self.navigateToChat = true
+                            }) )
+                        }
                     }
-                    
                 }
-                .alert(isPresented: $navigationAlert) {
-                    Alert(title: Text(alertTitle),message: Text(alertMsg),dismissButton: .default(Text("Ok"), action: {
-                        UserDefaults.standard.set(self.number, forKey: "login_number")
-                        UserDefaults.standard.set("true", forKey: "loggedin")
-                        self.navigateToChat = true
-                    }) )
-                }
-                
             }
 
             .navigationDestination(isPresented: $navigateToChat, destination: {
