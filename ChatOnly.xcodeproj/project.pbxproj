@@ -459,6 +459,8 @@
 				DEVELOPMENT_TEAM = RWVJG74T7U;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera for taking pictures to set your profile picture";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need access to your photo library for selecting images to set your profile picture";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -489,6 +491,8 @@
 				DEVELOPMENT_TEAM = RWVJG74T7U;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera for taking pictures to set your profile picture";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need access to your photo library for selecting images to set your profile picture";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

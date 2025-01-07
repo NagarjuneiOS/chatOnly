@@ -10,6 +10,8 @@ import Firebase
 import FirebaseCore
 import FirebaseDatabase
 import FirebaseMessaging
+import FirebaseStorage
+
 
 struct RegisterView: View {
     @Environment(\.presentationMode) var presentationMode // Access to presentation mode
@@ -24,8 +26,13 @@ struct RegisterView: View {
     @State var isShowAlert = false
     @State var navigateToChat = false
     @State var navigationAlert = false
+    @State var ProfileImage: UIImage? = UIImage(named: "profile")
+    @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    @State private var isImagePickerPresented = false
+    @State private var imageOptionSelected = false
+    @State private var imageUrl = ""
     var ref: DatabaseReference! = Database.database().reference() // Initialize Firebase Database reference
-
+    @State var firestorage = Storage.storage()
     var body: some View {
       
             NavigationStack{
@@ -75,7 +82,7 @@ struct RegisterView: View {
                                     }
                                     HStack{
                                         TextField("Enter First name",text: $firstName)
-                                        // .padding(.horizontal, 10)
+                                         .padding(.horizontal, 10)
                                             .frame(height: 50) // Increased height for username field
                                             .background(Color(.systemGray6)) // Optional background color
                                             .cornerRadius(8)
@@ -96,7 +103,7 @@ struct RegisterView: View {
                                     }
                                     HStack{
                                         TextField("Enter Last name",text: $lastName)
-                                        // .padding(.horizontal, 10)
+                                         .padding(.horizontal, 10)
                                             .frame(height: 50) // Increased height for username field
                                             .background(Color(.systemGray6)) // Optional background color
                                             .cornerRadius(8)
@@ -117,7 +124,7 @@ struct RegisterView: View {
                                     }
                                     HStack{
                                         TextField("Enter Phone Number",text: $number)
-                                        // .padding(.horizontal, 10)
+                                         .padding(.horizontal, 10)
                                             .frame(height: 50) // Increased height for username field
                                             .background(Color(.systemGray6)) // Optional background color
                                             .cornerRadius(8)
@@ -138,7 +145,7 @@ struct RegisterView: View {
                                     }
                                     HStack{
                                         TextField("Enter Password",text: $passWord)
-                                        // .padding(.horizontal, 10)
+                                        .padding(.horizontal, 10)
                                             .frame(height: 50) // Increased height for username field
                                             .background(Color(.systemGray6)) // Optional background color
                                             .cornerRadius(8)
@@ -159,7 +166,7 @@ struct RegisterView: View {
                                     }
                                     HStack{
                                         TextField("Enter confirm Password",text: $confirmPassword)
-                                        // .padding(.horizontal, 10)
+                                         .padding(.horizontal, 10)
                                             .frame(height: 50) // Increased height for username field
                                             .background(Color(.systemGray6)) // Optional background color
                                             .cornerRadius(8)
@@ -170,7 +177,73 @@ struct RegisterView: View {
                                     
                                 }
                                 
-                                
+                                VStack(spacing: -20){
+                                    HStack{
+                                        Text("Profile picture")
+                                            .font(.subheadline)
+                                            .fontWeight(.semibold)
+                                            .padding()
+                                            .foregroundStyle(.gray)
+                                        Spacer()
+                                    }
+                                    ZStack{
+                                        
+                                        Circle()
+                                            .fill(Color.white)
+                                            .frame(width: 200, height: 200)
+                                        Image(uiImage: ProfileImage!)
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fill)
+                                            .frame(width: 200,height: 200)
+                                            .clipShape(Circle())
+                                        
+                                        
+                                        VStack{
+                                            Spacer()
+                                            HStack{
+                                                Spacer()
+                                                Button {
+                                                    print("open gallery button tapped")
+                                                    isImagePickerPresented = true
+                                                } label: {
+                                                    Image("upload")
+                                                        .resizable()
+                                                        .frame(width: 40, height: 40)
+                                                }
+
+                                                .actionSheet(isPresented: $isImagePickerPresented) {
+                                                               ActionSheet(
+                                                                   title: Text("Select Image Source"),
+                                                                   buttons: [
+                                                                       .default(Text("Camera")) {
+                                                                           sourceType = .camera
+                                                                           self.imageOptionSelected = true
+                                                                       },
+                                                                       .default(Text("Photo Library")) {
+                                                                           sourceType = .photoLibrary
+                                                                           self.imageOptionSelected = true
+
+                                                                       },
+                                                                       .cancel()
+                                                                   ]
+                                                               )
+                                                           }
+                                                .sheet(isPresented: $imageOptionSelected) {
+                                                                // Use UIImagePickerController with the selected source type
+                                                    UnifiedImagePicker(selectedImage: $ProfileImage, isPresented: $imageOptionSelected, sourceType: sourceType)
+
+                                                            }
+                                                
+                                                
+                                            }
+                                       
+                                        }
+                                        .frame(width: 200,height: 200)
+                                        
+                                    }
+                                    
+                                    
+                                }
                             }
                             
                             Spacer()
@@ -179,7 +252,7 @@ struct RegisterView: View {
                                 print("Register button tapped")
                                 self.checkAuthentication { Bool in
                                     if Bool{
-                                        self.registerUser()
+                                        self.uploadIMage()
                                         self.isShowAlert = false
                                         
                                     }else{
@@ -227,6 +300,7 @@ struct RegisterView: View {
             .onAppear {
                 
                 self.fetchUserDetails()
+                firestorage = Storage.storage(url: firebasestorageURL)
             }
         
     }
@@ -266,7 +340,8 @@ struct RegisterView: View {
             "lastname": lastName,
             "phonenumber": number,
             "password" : passWord,
-            "timestamp": Date().description
+            "timestamp": Date().description,
+            "imageurl": imageUrl
         ] as [String : Any]
         
         ref.child("users").child("\(firstName)_\(number)").setValue(userData){ error, _ in
@@ -281,8 +356,68 @@ struct RegisterView: View {
         }
         
     }
+    func uploadIMage(){
+        let imageData = ProfileImage?.jpegData(compressionQuality: 1.0)
+        let firebaseStroageRef = self.firestorage.reference()
+        let iamgeRef = firebaseStroageRef.child("user_profile_images").child("\(firstName)_\(number).jpg")
+        iamgeRef.putData(imageData!){ data, error in
+            print("Image uploaded")
+            
+            
+            iamgeRef.downloadURL { url,error in
+                if let error = error{
+                    print(error)
+                }else if let url = url{
+                    print(url)
+                    self.imageUrl = url.absoluteString
+                    self.registerUser()
+                }
+            }
+        }
+        
+    }
+    
+    
 }
 
 #Preview {
     RegisterView()
 }
+struct UnifiedImagePicker: UIViewControllerRepresentable {
+    @Binding var selectedImage: UIImage?
+    @Binding var isPresented: Bool
+    var sourceType: UIImagePickerController.SourceType
+    
+    // Coordinator to handle the image picker delegate
+    class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+        var parent: UnifiedImagePicker
+        
+        init(parent: UnifiedImagePicker) {
+            self.parent = parent
+        }
+        
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            parent.isPresented = false
+        }
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            if let image = info[.originalImage] as? UIImage {
+                parent.selectedImage = image
+            }
+            parent.isPresented = false
+        }
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(parent: self)
+    }
+    
+    func makeUIViewController(context: Context) -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.delegate = context.coordinator
+        picker.sourceType = sourceType // Set the source type dynamically
+        return picker
+    }
+
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
+}
+

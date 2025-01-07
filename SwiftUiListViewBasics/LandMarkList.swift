@@ -12,6 +12,12 @@ struct LandMarkList: View {
     @State private var receiverUserNumber = ""
     @State private var navigateToSettings = false
     @State private var username: String = ""
+    @State private var lastName: String = ""
+    @State private var password: String = ""
+    @State private var phoneNumber: String = ""
+    @State private var profilePicture: String = ""
+    @State private var navigateToProfile = false
+
     
     var body: some View {
         NavigationStack {
@@ -38,6 +44,15 @@ struct LandMarkList: View {
                             
                             HStack(spacing: 20) {
                                 Menu {
+                                  
+                                    
+                                    Button {
+                                        print("Profile button tapped")
+                                        self.navigateToProfile = true
+                                    } label: {
+                                        Text("Profile")
+                                        Image("profile")
+                                    }
                                     Button {
                                         print("Logout button tapped")
                                         self.reset() // Call reset when the settings button is tapped
@@ -46,6 +61,7 @@ struct LandMarkList: View {
                                         Text("Logout")
                                         Image("switch")
                                     }
+
                                 } label: {
                                     Image(uiImage: UIImage(named: "settings")!)
                                         .resizable()
@@ -80,9 +96,18 @@ struct LandMarkList: View {
                     .navigationDestination(isPresented: $navigateToSettings) {
                         NewWelcomeView()
                     }
+                    .navigationDestination(isPresented: $navigateToProfile, destination: {
+                        ProfileView(firstName: $username, lastName: $lastName, password: $password, phoneNumber: $phoneNumber, profilePicUlr: $profilePicture)
+                    })
                     .hidden()
                 }
             }
+            .onAppear {
+                self.userNumber = UserDefaults.standard.value(forKey: "login_number") as? String ?? ""
+                self.fetchUserDetails()
+                self.requestListModels()
+            }
+
         }
         .navigationBarBackButtonHidden(true)
         .alert(isPresented: Binding<Bool>(
@@ -117,7 +142,7 @@ struct LandMarkList: View {
         }
         
     }
-
+    
     func reset() {
         UserDefaults.standard.set("", forKey: "login_number")
         UserDefaults.standard.set("false", forKey: "loggedin")
@@ -213,11 +238,16 @@ struct LandMarkList: View {
                     let password = datas?["password"] as? String ?? ""
                     let number = datas?["phonenumber"] as? String ?? ""
                     let time = datas?["timestamp"] as? String ?? ""
+                    let image = datas?["imageurl"] as? String ?? ""
                     if self.userNumber != number{
-                        var tempUserModel = UsersModel(firstName: firstName,lastName: lastName,number: number,password: password,timeStamp: time)
+                        let tempUserModel = UsersModel(firstName: firstName,lastName: lastName,number: number,password: password,timeStamp: time,imageurl: image)
                         usersModel.append(tempUserModel)
                     }else{
                         self.username = firstName
+                        self.lastName = lastName
+                        self.password = password
+                        self.phoneNumber = number
+                        self.profilePicture = image
                     }
                     
                 }

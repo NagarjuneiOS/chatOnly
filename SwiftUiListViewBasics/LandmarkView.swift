@@ -10,19 +10,53 @@ import SwiftUI
 struct LandmarkView: View {
    // var ladmarks: Landmark
     var userData: UsersModel
-    
+    @State private var isLoading = true // Track loading state
+
     var body: some View {
         
         ZStack{
             LinearGradient(colors: [Color.pink.opacity(0.2)], startPoint: .top, endPoint: .bottom)
                 .ignoresSafeArea()
                            
-        HStack{
-            Image(.charleyrivers)
-                .resizable()
-                .clipShape(.circle)
-                .frame(width: 50,height: 50)
-                .padding(EdgeInsets(top: 0, leading: 15, bottom:  0, trailing: 0))
+            HStack{
+               
+                    
+                
+                AsyncImage(url: URL(string:userData.imageurl ?? "")) { phase in
+                    switch phase {
+                    case .empty:
+                                       
+                       
+                        Image("profile")
+                            .resizable()
+                            .scaledToFit()
+                            .clipShape(Circle())
+                            .frame(width: 50, height: 50)
+                            .padding(.leading, 15)
+                        
+                    case .success(let image):
+                        // Once the image is loaded, show it
+                       
+                        image.resizable()
+                            .clipShape(Circle())
+                            .frame(width: 50, height: 50)
+                            .padding(.leading, 15)
+                        
+                    case .failure:
+                        // Show a fallback image when loading fails
+                        
+                        Image(systemName: "photo.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .clipShape(Circle())
+                            .frame(width: 50, height: 50)
+                            .padding(.leading, 15)
+
+                    @unknown default:
+                        EmptyView()
+                    }
+                }
+            
             VStack(alignment: .leading,spacing: 0){
                 Text(userData.firstName ?? "" + (userData.lastName ?? ""))
                     .fontWeight(.semibold)

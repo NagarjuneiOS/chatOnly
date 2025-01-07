@@ -29,6 +29,7 @@ struct NewWelcomeView: View {
                     .scaledToFit()
                     .frame(width: 200, height: 150)
                     .cornerRadius(20)
+                    .clipShape(Circle())
                 
                 VStack(spacing: 0){
                     // Welcome Text
@@ -100,19 +101,19 @@ struct NewWelcomeView: View {
                         }
                         
                     }
-                    HStack{
-                        
-                        Button(action: {
-                            print("Forgot password tapped")
-                        }) {
-                            Text("Forgot password?")
-                                .font(.caption)
-                                .foregroundColor(.teal)
-                                .frame(width: 200, height: 20)
-                            // .background(Color.blue)
-                                .cornerRadius(10)
-                        }
-                    }
+//                    HStack{
+//                        
+//                        Button(action: {
+//                            print("Forgot password tapped")
+//                        }) {
+//                            Text("Forgot password?")
+//                                .font(.caption)
+//                                .foregroundColor(.teal)
+//                                .frame(width: 200, height: 20)
+//                            // .background(Color.blue)
+//                                .cornerRadius(10)
+//                        }
+//                    }
                     
                 }
                 VStack(spacing: 0){

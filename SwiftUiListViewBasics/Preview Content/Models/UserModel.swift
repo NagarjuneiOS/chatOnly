@@ -16,12 +16,14 @@ struct UsersModel{
     var number: String?
     var password: String?
     var timeStamp: String?
-    init(firstName: String? = nil, lastName: String? = nil, number: String? = nil, password: String? = nil, timeStamp: String? = nil) {
+    var imageurl: String?
+    init(firstName: String? = nil, lastName: String? = nil, number: String? = nil, password: String? = nil, timeStamp: String? = nil,imageurl: String? = nil) {
         self.firstName = firstName
         self.lastName = lastName
         self.number = number
         self.password = password
         self.timeStamp = timeStamp
+        self.imageurl = imageurl
     }
 }
 

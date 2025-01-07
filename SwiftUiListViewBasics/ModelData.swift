@@ -8,6 +8,7 @@
 import Foundation
 
 var landMarks: [Landmark] = load("landmarkData.json")
+var firebasestorageURL = "gs://testobserver-c0441.appspot.com"
 
 func load<T: Decodable>(_ filename: String) -> T {
     let data: Data
