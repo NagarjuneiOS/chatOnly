@@ -148,10 +148,10 @@ struct ChatVC: View {
             ref.child("user_chats").observe(.value) { snapshot in
                 if let userChats = snapshot.value as? [String: Any]{
                     var keysArray = userChats.compactMap { $0.key }
-                    if keysArray.contains("\(sender)_\(receiverUserNumberr ?? "")"){
-                        self.childPath = "\(sender ?? "")_\(receiverUserNumberr)"
+                    if keysArray.contains("\(sender ?? "")_\(receiverUserNumberr ?? "")"){
+                        self.childPath = "\(sender ?? "")_\(receiverUserNumberr ?? "")"
                         
-                    } else if keysArray.contains("\(receiverUserNumberr)_\(sender)"){
+                    } else if keysArray.contains("\(receiverUserNumberr ?? "")_\(sender ?? "")"){
                         print("True....\(keysArray)")
                         self.childPath = "\(receiverUserNumberr ?? "")_\(sender ?? "")"
                     }else{
@@ -216,7 +216,7 @@ struct ChatVC: View {
             print(self.sender)
             print(receiverUserNumberr)
             let sender = self.sender
-            let receiver = receiverUserNumberr
+            let receiver = receiverUserNumberr ?? ""
             let userData = [
                 "sender" : sender,
                 "receiver": receiver,

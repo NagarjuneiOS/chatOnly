@@ -33,6 +33,8 @@ struct RegisterView: View {
     @State private var imageUrl = ""
     var ref: DatabaseReference! = Database.database().reference() // Initialize Firebase Database reference
     @State var firestorage = Storage.storage()
+    @State var validationAlert = false
+    @State var isLoading = false
     var body: some View {
       
             NavigationStack{
@@ -233,6 +235,7 @@ struct RegisterView: View {
                                                     UnifiedImagePicker(selectedImage: $ProfileImage, isPresented: $imageOptionSelected, sourceType: sourceType)
 
                                                             }
+                                                // Loading
                                                 
                                                 
                                             }
@@ -250,15 +253,24 @@ struct RegisterView: View {
                             
                             Button {
                                 print("Register button tapped")
-                                self.checkAuthentication { Bool in
+                                
+                                self.checkValidity { Bool in
                                     if Bool{
-                                        self.uploadIMage()
-                                        self.isShowAlert = false
-                                        
-                                    }else{
-                                        self.isShowAlert = true
+                                        self.checkAuthentication { Bool in
+                                            if Bool{
+                                                self.isLoading = true
+                                                self.uploadIMage()
+                                                self.isShowAlert = false
+                                                
+                                            }else{
+                                                self.isShowAlert = true
+                                                self.isLoading = false
+                                                
+                                            }
+                                        }
                                     }
                                 }
+
                                 
                                 
                             } label: {
@@ -281,6 +293,19 @@ struct RegisterView: View {
                             }
                             
                         }
+                      
+                                  
+                        .alert(self.alertTitle, isPresented: $validationAlert) {
+                            Button {
+                                
+                            } label: {
+                                Text("OK")
+                            }
+                        }message:{
+                            Text(alertMsg)
+                                .bold()
+                        }
+                        
                         
                         .alert(isPresented: $navigationAlert) {
                             Alert(title: Text(alertTitle),message: Text(alertMsg),dismissButton: .default(Text("Ok"), action: {
@@ -288,6 +313,9 @@ struct RegisterView: View {
                                 UserDefaults.standard.set("true", forKey: "loggedin")
                                 self.navigateToChat = true
                             }) )
+                        }
+                        if isLoading {
+                            LoaderVC() // Show loader when isLoading is true
                         }
                     }
                 }
@@ -314,6 +342,33 @@ struct RegisterView: View {
         }
         
         
+    }
+    
+    func checkValidity(_completion: @escaping (Bool) -> Void){
+        if number.count != 10{
+            alertMsg = "Please enter valid number to be ten digits"
+            validationAlert = true
+            _completion(false)
+        }else if passWord != confirmPassword{
+            alertMsg = "Please enter the same password"
+            validationAlert = true
+            _completion(false)
+        }else if firstName == ""{
+            alertMsg = "Please enter the first name"
+            validationAlert = true
+            _completion(false)
+        }else if lastName == ""{
+            alertMsg = "Please enter the last name"
+            validationAlert = true
+            _completion(false)
+        }
+        else if ProfileImage == UIImage(named: "profile"){
+            alertMsg = "Please upload the profile picture"
+            validationAlert = true
+        }else{
+            _completion(true)
+
+        }
     }
      func fetchUserDetails(){
          ref.child("users").observe(.value, with: { snapshot in
@@ -349,6 +404,7 @@ struct RegisterView: View {
                 print(error)
             }else{
                 print("User registered success")
+                isLoading = false
                 self.navigationAlert = true
                 self.alertMsg = "Your registration seems successful"
             }
@@ -421,3 +477,44 @@ struct UnifiedImagePicker: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
 }
 
+
+struct LoaderVC: View {
+    // MARK: - Properties
+    @State private var showSpinner:Bool = true
+    @State private var degree:Int = 270
+    @State private var spinnerLength = 0.6
+    
+    // MARK: - Body
+    var body: some View {
+        ZStack{
+            VStack{
+                ZStack{
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.2))
+                        .frame(width: UIScreen.main.bounds.width,height: UIScreen.main.bounds.height)
+                        .ignoresSafeArea()
+                    if showSpinner{
+                        Circle()
+                            .trim(from: 0.0,to: spinnerLength)
+                            .stroke(LinearGradient(colors: [.red,.blue], startPoint: .topLeading, endPoint: .bottomTrailing),style: StrokeStyle(lineWidth: 8.0,lineCap: .round,lineJoin:.round))
+                            .animation(Animation.easeIn(duration: 1.5).repeatForever(autoreverses: true))
+                            .frame(width: 60,height: 60)
+                            .rotationEffect(Angle(degrees: Double(degree)))
+                            .animation(Animation.linear(duration: 1).repeatForever(autoreverses: false))
+                            .onAppear{
+                                degree = 270 + 360
+                                spinnerLength = 0
+                            }
+                    }
+                }
+
+            }
+        }
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        LoaderVC()
+    }
+}

@@ -17,6 +17,7 @@ struct LandMarkList: View {
     @State private var phoneNumber: String = ""
     @State private var profilePicture: String = ""
     @State private var navigateToProfile = false
+    @State private var nochatsFound = true
 
     
     var body: some View {
@@ -44,7 +45,7 @@ struct LandMarkList: View {
                             
                             HStack(spacing: 20) {
                                 Menu {
-                                  
+                                    
                                     
                                     Button {
                                         print("Profile button tapped")
@@ -61,7 +62,7 @@ struct LandMarkList: View {
                                         Text("Logout")
                                         Image("switch")
                                     }
-
+                                    
                                 } label: {
                                     Image(uiImage: UIImage(named: "settings")!)
                                         .resizable()
@@ -75,7 +76,16 @@ struct LandMarkList: View {
                         .padding(.top)
                     }
                     Divider()
-                    
+                    if nochatsFound{
+                        VStack {
+                            Spacer()
+                            Text("No users found")
+                                .font(.caption)
+                                .bold()
+                                .foregroundColor(.black)
+                            Spacer()
+                        }
+                    }else{
                     List(usersModel, id: \.number) { userModel in
                         Button {
                             self.receiverUserNumber = userModel.number ?? ""
@@ -83,7 +93,7 @@ struct LandMarkList: View {
                             sendRequestToUsers(userModel: userModel) {}
                         } label: {
                             LandmarkView(userData: userModel)
-
+                            
                         }
                         .buttonStyle(PlainButtonStyle()) // Prevents automatic button styling changes
                         .listRowInsets(EdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 10)) // Remove padding between list rows
@@ -91,8 +101,12 @@ struct LandMarkList: View {
                     .listStyle(PlainListStyle())
                     .padding(EdgeInsets(top: 10, leading: -20, bottom: 0, trailing: -20))
                     
-                    NavigationLink(destination: ChatVC(), isActive: $navigateToChat) {}
-                        .hidden()
+                  
+                }
+                   
+                }
+                NavigationLink(destination: ChatVC(), isActive: $navigateToChat) {}
+                    .hidden()
                     .navigationDestination(isPresented: $navigateToSettings) {
                         NewWelcomeView()
                     }
@@ -100,7 +114,6 @@ struct LandMarkList: View {
                         ProfileView(firstName: $username, lastName: $lastName, password: $password, phoneNumber: $phoneNumber, profilePicUlr: $profilePicture, referredProfilePicUlr: profilePicture, referencedFirstName: username)
                     })
                     .hidden()
-                }
             }
             .onAppear {
                 self.userNumber = UserDefaults.standard.value(forKey: "login_number") as? String ?? ""
@@ -252,6 +265,7 @@ struct LandMarkList: View {
                     
                 }
                 dump(usersModel)
+                self.nochatsFound = self.usersModel.count == 0 ? true : false
             }
         }) { error in
             print("Failed to read value: \(error.localizedDescription)")
