@@ -359,7 +359,7 @@ struct RegisterView: View {
     func uploadIMage(){
         let imageData = ProfileImage?.jpegData(compressionQuality: 1.0)
         let firebaseStroageRef = self.firestorage.reference()
-        let iamgeRef = firebaseStroageRef.child("user_profile_images").child("\(firstName)_\(number).jpg")
+        let iamgeRef = firebaseStroageRef.child("user_profile_images").child("\(firstName)_\(number)").child("\(firstName)_\(number).jpg")
         iamgeRef.putData(imageData!){ data, error in
             print("Image uploaded")
             

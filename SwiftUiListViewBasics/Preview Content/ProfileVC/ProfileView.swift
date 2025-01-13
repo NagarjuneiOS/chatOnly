@@ -1,23 +1,36 @@
 import SwiftUI
 import PhotosUI
+import Firebase
+import FirebaseDatabase
+import FirebaseStorage
 struct ProfileView: View {
-   // @Environment(\.dismiss) var isPresented
     @Environment(\.dismiss) var dismiss
+   // @Environment(\.presentationMode) var dismiss
     @Binding var firstName: String
     @Binding var lastName: String
     @Binding var password: String
     @Binding var phoneNumber: String
+     
     @State private var showImagePicker = false
     @State private var profilepic: UIImage? = UIImage(named: "profile") // Placeholder image
     @State private var openProfile: Bool = false
     @Binding var profilePicUlr: String
+     var referredProfilePicUlr: String
+     var referencedFirstName: String
+    @State var showAlertForUpdate = false
+    @State var deleteAccountAlert: Bool = false
+    @State var homeAlert: Bool = false
+    @State var navigationAlert = false
+    @State var isBackPressed = false
     
     
     @State private var activeField: String = "" // Track the active field
     @State private var selectedSource : UIImagePickerController.SourceType = .photoLibrary
+    var daataBase: DatabaseReference! = Database.database().reference()
+    var fireBaseStorage: StorageReference! = Storage.storage().reference()
     
     var body: some View {
-        NavigationView{
+        NavigationStack{
            
             ZStack{
                 
@@ -28,7 +41,7 @@ struct ProfileView: View {
                 VStack(spacing: -10){
                     HStack{
                         Button {
-                            dismiss()
+                            isBackPressed = true
                         } label: {
                             Image("back")
                                 .resizable()
@@ -117,7 +130,102 @@ struct ProfileView: View {
                             nameFields(values: $lastName, titles: "Last Name", identifier: "last", activeField: $activeField)
                             nameFields(values: $password, titles: "Password", identifier: "password", activeField: $activeField)
                             nameFields(values: $phoneNumber, titles: "Phone Number", identifier: "number", activeField: $activeField)
+                            
+                       
+                          
                         }
+                        Button{
+                            self.showAlertForUpdate = true
+                        }label: {
+                            Text("Update")
+                            
+                                .font(.callout)
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity) // Expands button horizontally
+                                .frame(height: 50) // Sets height to 50
+                                .background(Color.pink)
+                                .foregroundColor(.white)
+                                .cornerRadius(25)
+                                .shadow(radius: 5)
+                                .padding()
+                        }
+                        .alert("Chat only", isPresented: $showAlertForUpdate) {
+                            Button {
+                                self.fireBaseStoreImaegeUdpate()
+                            } label: {
+                                Text("Ok")
+                                    .font(.callout)
+                                    .bold()
+                            }
+                            Button {
+                                
+                            } label: {
+                                Text("cancel")
+                                    .font(.callout)
+                                    .bold()
+                            }
+
+                        }message:{
+                            Text("Are you sure you want to update your profile picture")
+                                .bold()
+                        }
+                            
+                        Button{
+                            self.deleteAccountAlert = true
+
+                        }label: {
+                            Text("Delete account")
+                            
+                                .font(.callout)
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity) // Expands button horizontally
+                                .frame(height: 50) // Sets height to 50
+                                .background(Color.pink)
+                                .foregroundColor(.white)
+                                .cornerRadius(25)
+                                .shadow(radius: 5)
+                                .padding()
+                        }
+                        .alert("Chat only", isPresented: $deleteAccountAlert) {
+                            Button {
+                                self.homeAlert = true
+                                self.deleteAccoint()
+                            } label: {
+                                Text("Ok")
+                                    .font(.callout)
+                                    .bold()
+                            }
+                            Button {
+                                
+                            } label: {
+                                Text("cancel")
+                                    .font(.callout)
+                                    .bold()
+                            }
+
+                        }message:{
+                            Text("Are you sure you want to delete your account?")
+                                .bold()
+                        }
+                       
+                       
+                        .alert("Chat only", isPresented: $homeAlert) {
+                            Button {
+                                self.navigationAlert = true
+                            } label: {
+                                Text("Ok")
+                                    .font(.callout)
+                                    .bold()
+                            }
+
+                        }message:{
+                            Text("Account deleted successfully")
+                                .bold()
+                        }
+                        .navigationDestination(isPresented: $navigationAlert) {
+                            NewWelcomeView()
+                        }
+                       
                         
                         Spacer()
                         
@@ -129,7 +237,7 @@ struct ProfileView: View {
                     
                     
                 }
-                .navigationBarHidden(true) // Hide the navigation bar
+                .navigationBarHidden(true) // Hide the navigation ba
                 .sheet(isPresented: $showImagePicker) {
                     ImagePicker(sourceType: selectedSource, selectedImage: $profilepic,profilePicUrl: $profilePicUlr)
                 }
@@ -139,10 +247,27 @@ struct ProfileView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     
                 }
+                       
             }
     }
-            
+           
+            .onAppear(){
+                print(referredProfilePicUlr)
+                print(profilePicUlr)
+            }
+           
+            // Navigate back manually using isBackPressed flag
+                        .onChange(of: isBackPressed) { _ in
+                            if isBackPressed {
+                                // Use this block to programmatically manage navigation here
+                                dismiss() // Dismiss the current view if it's inside a sheet, or handle accordingly in your Navigation Stack
+                            }
+                        }
+//                        .navigationDestination(isPresented: $navigationAlert) {
+//                            NewWelcomeView()
+//                        }
 }
+       
         .navigationBarBackButtonHidden(true)
         
     }
@@ -166,10 +291,94 @@ struct ProfileView: View {
             }
         }
     
+    
+    func fireBaseStoreImaegeUdpate() {
+        print(referredProfilePicUlr)
+        print(profilePicUlr)
+        let storage = Storage.storage().reference(forURL: referredProfilePicUlr)
+        storage.delete { error in
+            if let error = error {
+                
+            }else{
+                print("delete successful")
+                self.uploadIMage()
+            }
+        }
+        
+            
+        
+    }
+    func deleteAccoint(){
+        var nodeKey = "\(self.referencedFirstName)_\(self.phoneNumber)"
+        self.daataBase?.child("users").child(nodeKey).removeValue(completionBlock: { error, ref in
+            if let error = error {
+                
+            }else{
+                print("delete success")
+            }
+        })
+    }
+    
+        func uploadIMage(){
+            let imageData = profilepic?.jpegData(compressionQuality: 1.0)
+            let firebaseStroageRef = self.fireBaseStorage
+            let iamgeRef  = firebaseStroageRef?.child("user_profile_images").child("\(firstName)_\(phoneNumber)").child("\(firstName)_\(phoneNumber).jpg")
+            iamgeRef?.putData(imageData!){ data, error in
+                print("Image uploaded")
+                
+                
+                iamgeRef?.downloadURL { url,error in
+                    if let error = error{
+                        print(error)
+                    }else if let url = url{
+                        print(url)
+                        self.updateDate(st: url.absoluteString)
+                    }
+                }
+            }
+            
+        }
+    
+    func deleteAccount() {
+        var nodeKey = "\(self.referencedFirstName)_\(self.phoneNumber)"
+        var newNodeKey = "\(self.firstName)_\(self.phoneNumber)"
+        self.daataBase.child("users").child(nodeKey).removeValue { Error, ref in
+            if let error = Error {
+                print("Error removing user: \(error)")
+            }else{
+            }
+        }
+    }
+    func updateDate(st:String) {
+        let userData = [
+            "firstname" : firstName,
+            "lastname": lastName,
+            "phonenumber": phoneNumber,
+            "password" : password,
+            "timestamp": Date().description,
+            "imageurl": st
+        ] as [String : Any]
+        var nodeKey = "\(self.referencedFirstName)_\(self.phoneNumber)"
+        var newNodeKey = "\(self.firstName)_\(self.phoneNumber)"
+        self.daataBase.child("users").child(nodeKey).removeValue { Error, ref in
+           if let error = Error {
+                print("Error removing user: \(error)")
+           }else{
+               self.daataBase.child("users").child(newNodeKey).setValue(userData) { error, rerference in
+                   if let error = error {
+                       print("Error adding user: \(error)")
+                   }else{
+                       print("user data addded successfully")
+                   }
+               }
+           }
+        }
+    }
+    
 }
 
 #Preview {
-    ProfileView(firstName: .constant(""), lastName: .constant(""), password: .constant(""), phoneNumber: .constant(""), profilePicUlr: .constant(""))
+    ProfileView(firstName: .constant(""), lastName: .constant(""), password: .constant(""), phoneNumber: .constant(""), profilePicUlr: .constant(""), referredProfilePicUlr: "", referencedFirstName: "")
 }
 
 struct nameFields: View {
