@@ -110,9 +110,9 @@ struct LandMarkList: View {
                     .navigationDestination(isPresented: $navigateToSettings) {
                         NewWelcomeView()
                     }
-                    .navigationDestination(isPresented: $navigateToProfile, destination: {
+                    .navigationDestination(isPresented: $navigateToProfile){
                         ProfileView(firstName: $username, lastName: $lastName, password: $password, phoneNumber: $phoneNumber, profilePicUlr: $profilePicture, referredProfilePicUlr: profilePicture, referencedFirstName: username)
-                    })
+                    }
                     .hidden()
             }
             .onAppear {

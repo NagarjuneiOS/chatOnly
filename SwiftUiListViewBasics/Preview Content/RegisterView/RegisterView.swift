@@ -35,6 +35,8 @@ struct RegisterView: View {
     @State var firestorage = Storage.storage()
     @State var validationAlert = false
     @State var isLoading = false
+    @State var showPassword = false
+    @State var showConfirmPassword = false
     var body: some View {
       
             NavigationStack{
@@ -145,17 +147,59 @@ struct RegisterView: View {
                                             .foregroundStyle(.gray)
                                         Spacer()
                                     }
+                                   
+                                       
+
                                     HStack{
-                                        TextField("Enter Password",text: $passWord)
-                                        .padding(.horizontal, 10)
-                                            .frame(height: 50) // Increased height for username field
-                                            .background(Color(.systemGray6)) // Optional background color
-                                            .cornerRadius(8)
-                                        
-                                            .padding()
+                                        ZStack{
+                                        if self.showPassword{
+                                            TextField("Enter Password",text: $passWord)
+                                                .padding(.horizontal, 10)
+                                                .frame(height: 50) // Increased height for username field
+                                                .background(Color(.systemGray6)) // Optional background color
+                                                .cornerRadius(8)
+                                            
+                                                .padding()
+                                        }else{
+                                            SecureField("Enter Password",text: $passWord)
+                                                .padding(.horizontal, 10)
+                                                .frame(height: 50) // Increased height for username field
+                                                .background(Color(.systemGray6)) // Optional background color
+                                                .cornerRadius(8)
+                                            
+                                                .padding()
+                                        }
+                                            
+                                            if showPassword{
+                                                HStack{
+                                                    Spacer()
+                                                    Button{
+                                                        self.showPassword.toggle()
+                                                    }label:{
+                                                        Image("view")
+                                                            .resizable()
+                                                            .frame(width: 25, height: 25)
+                                                    }
+                                                    .padding(.trailing,25)
+                                                }
+                                                
+                                            }else{
+                                                HStack{
+                                                    Spacer()
+                                                    Button{
+                                                        self.showPassword.toggle()
+                                                    }label:{
+                                                        Image("hide")
+                                                            .resizable()
+                                                            .frame(width: 25, height: 25)
+                                                    }
+                                                    .padding(.trailing,25)
+                                                }
+                                            }
                                     }
-                                    
-                                    
+                                        
+                                     
+                                }
                                 }
                                 VStack(spacing: -20){
                                     HStack{
@@ -167,14 +211,55 @@ struct RegisterView: View {
                                         Spacer()
                                     }
                                     HStack{
-                                        TextField("Enter confirm Password",text: $confirmPassword)
-                                         .padding(.horizontal, 10)
-                                            .frame(height: 50) // Increased height for username field
-                                            .background(Color(.systemGray6)) // Optional background color
-                                            .cornerRadius(8)
-                                        
-                                            .padding()
+                                        ZStack{
+                                            if self.showConfirmPassword{
+                                            TextField("Enter confirm Password",text: $confirmPassword)
+                                                .padding(.horizontal, 10)
+                                                .frame(height: 50) // Increased height for username field
+                                                .background(Color(.systemGray6)) // Optional background color
+                                                .cornerRadius(8)
+                                            
+                                                .padding()
+                                        }else{
+                                            SecureField("Enter confirm Password",text: $confirmPassword)
+                                                .padding(.horizontal, 10)
+                                                .frame(height: 50) // Increased height for username field
+                                                .background(Color(.systemGray6)) // Optional background color
+                                                .cornerRadius(8)
+                                            
+                                                .padding()
+                                        }
+                                            
+                                            if showConfirmPassword{
+                                                HStack{
+                                                    Spacer()
+                                                    Button{
+                                                        self.showConfirmPassword.toggle()
+                                                    }label:{
+                                                        Image("view")
+                                                            .resizable()
+                                                            .frame(width: 25, height: 25)
+                                                    }
+                                                    .padding(.trailing,25)
+                                                }
+                                                
+                                            }else{
+                                                HStack{
+                                                    Spacer()
+                                                    Button{
+                                                        self.showConfirmPassword.toggle()
+                                                    }label:{
+                                                        Image("hide")
+                                                            .resizable()
+                                                            .frame(width: 25, height: 25)
+                                                    }
+                                                    .padding(.trailing,25)
+                                                }
+                                            }
                                     }
+                                        
+                                     
+                                }
                                     
                                     
                                 }

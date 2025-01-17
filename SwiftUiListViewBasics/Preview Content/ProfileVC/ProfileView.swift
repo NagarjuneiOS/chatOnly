@@ -241,14 +241,15 @@ struct ProfileView: View {
                 .sheet(isPresented: $showImagePicker) {
                     ImagePicker(sourceType: selectedSource, selectedImage: $profilepic,profilePicUrl: $profilePicUlr)
                 }
+               
+                       
+            }
                 // Fullscreen Profile Viewer
                 if self.openProfile {
                     openImageVIew(profilePic: $profilepic, showView: $openProfile)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     
                 }
-                       
-            }
     }
            
             .onAppear(){

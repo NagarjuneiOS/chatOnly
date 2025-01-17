@@ -71,19 +71,10 @@ struct LandmarkView: View {
             
             Spacer()
             VStack(){
-                Text("1.45 am")
+                Text(convertToDate(userData.timeStamp!))
                     .fontWeight(.light)
                     .font(.subheadline)
-                
-                //                        if self.ladmarks.name == "Twin Lake" || self.ladmarks.name == "Silver Salmon Creek"{
-                //                            Text("1")
-                //                                .font(.system(size: 15, weight: .bold)) // Make the text larger and bold
-                //                                .foregroundColor(.white) // Set text color to white
-                //                                .padding(.horizontal, 10) // Horizontal padding for rounded effect
-                //                                .padding(.vertical, 5) // Vertical padding for height
-                //                                .background(Circle().fill(Color.green))
-                //                             //   .padding()
-                //                        }
+    
             }
             .padding()
             
@@ -99,6 +90,21 @@ struct LandmarkView: View {
         
 
     }
+    
+    func convertToDate(_ dateString: String) -> String {
+        let formatter = DateFormatter()
+        // Use lowercase 'yyyy' for year and 'mm' for minutes
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+        // Add timezone handling (optional: assuming UTC if no timezone is provided)
+           formatter.timeZone = TimeZone(abbreviation: "UTC")
+        if let date = formatter.date(from: dateString) {
+            formatter.dateFormat = "hh:mm a" // To convert to 12-hour format with AM/PM
+            return formatter.string(from: date)
+        } else {
+            return "Invalid date format" // Handle invalid date format
+        }
+    }
+
 }
 
 #Preview {
