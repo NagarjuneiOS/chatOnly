@@ -196,6 +196,7 @@ struct LoginView: View {
                     let password = datas?["password"] as? String ?? ""
                     let number = datas?["phonenumber"] as? String ?? ""
                     let time = datas?["timestamp"] as? String ?? ""
+                    UserDefaults.standard.set(datas?["imageurl"] as? String ?? "", forKey: "image")
                     var tempUserModel = UsersModel(firstName: firstName,lastName: lastName,number: number,password: password,timeStamp: time)
                     self.userModels.append(tempUserModel)
                 }

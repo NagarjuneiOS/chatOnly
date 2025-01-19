@@ -111,7 +111,7 @@ struct LandMarkList: View {
                         NewWelcomeView()
                     }
                     .navigationDestination(isPresented: $navigateToProfile){
-                        ProfileView(firstName: $username, lastName: $lastName, password: $password, phoneNumber: $phoneNumber, profilePicUlr: $profilePicture, referredProfilePicUlr: profilePicture, referencedFirstName: username)
+                        ProfileView(firstName: $username, lastName: $lastName, password: $password, phoneNumber: $phoneNumber, profilePicUlr: $profilePicture, referencedFirstName: username)
                     }
                     .hidden()
             }

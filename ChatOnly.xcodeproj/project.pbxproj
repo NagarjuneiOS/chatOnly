@@ -48,6 +48,7 @@
 		1596FD702CC0E4C8009922E9 /* ChatOnly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatOnly.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1596FD802CC0E4CB009922E9 /* ChatOnlyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatOnlyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1596FD8A2CC0E4CB009922E9 /* ChatOnlyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatOnlyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7F79BB432D3D09BB00F2527A /* ChatOnly-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "ChatOnly-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -114,6 +115,7 @@
 		1596FD672CC0E4C8009922E9 = {
 			isa = PBXGroup;
 			children = (
+				7F79BB432D3D09BB00F2527A /* ChatOnly-Info.plist */,
 				1596FD722CC0E4C8009922E9 /* SwiftUiListViewBasics */,
 				1596FD832CC0E4CB009922E9 /* SwiftUiListViewBasicsTests */,
 				1596FD8D2CC0E4CB009922E9 /* SwiftUiListViewBasicsUITests */,
@@ -459,11 +461,11 @@
 				DEVELOPMENT_TEAM = RWVJG74T7U;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ChatOnly-Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera for taking pictures to set your profile picture";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need access to your photo library for selecting images to set your profile picture";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
@@ -491,11 +493,11 @@
 				DEVELOPMENT_TEAM = RWVJG74T7U;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ChatOnly-Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera for taking pictures to set your profile picture";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need access to your photo library for selecting images to set your profile picture";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;

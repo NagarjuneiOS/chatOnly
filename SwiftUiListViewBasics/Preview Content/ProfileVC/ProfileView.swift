@@ -3,6 +3,7 @@ import PhotosUI
 import Firebase
 import FirebaseDatabase
 import FirebaseStorage
+var referredProfilePicUlr: String = UserDefaults.standard.string(forKey: "image") ?? ""
 struct ProfileView: View {
     @Environment(\.dismiss) var dismiss
    // @Environment(\.presentationMode) var dismiss
@@ -15,13 +16,14 @@ struct ProfileView: View {
     @State private var profilepic: UIImage? = UIImage(named: "profile") // Placeholder image
     @State private var openProfile: Bool = false
     @Binding var profilePicUlr: String
-     var referredProfilePicUlr: String
+  //   var referredProfilePicUlr: String
      var referencedFirstName: String
     @State var showAlertForUpdate = false
     @State var deleteAccountAlert: Bool = false
     @State var homeAlert: Bool = false
     @State var navigationAlert = false
     @State var isBackPressed = false
+    @State var isLoading = false
     
     
     @State private var activeField: String = "" // Track the active field
@@ -250,6 +252,9 @@ struct ProfileView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     
                 }
+                if isLoading {
+                    LoaderVC() // Show loader when isLoading is true
+                }
     }
            
             .onAppear(){
@@ -294,6 +299,7 @@ struct ProfileView: View {
     
     
     func fireBaseStoreImaegeUdpate() {
+        self.isLoading = true
         print(referredProfilePicUlr)
         print(profilePicUlr)
         let storage = Storage.storage().reference(forURL: referredProfilePicUlr)
@@ -369,6 +375,7 @@ struct ProfileView: View {
                    if let error = error {
                        print("Error adding user: \(error)")
                    }else{
+                       isLoading = false
                        print("user data addded successfully")
                    }
                }
@@ -379,7 +386,7 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView(firstName: .constant(""), lastName: .constant(""), password: .constant(""), phoneNumber: .constant(""), profilePicUlr: .constant(""), referredProfilePicUlr: "", referencedFirstName: "")
+    ProfileView(firstName: .constant(""), lastName: .constant(""), password: .constant(""), phoneNumber: .constant(""), profilePicUlr: .constant(""), referencedFirstName: "")
 }
 
 struct nameFields: View {
